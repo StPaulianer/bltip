@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<project name="test" default="compile" basedir=".">
+	<property name="src" value="src" />
+	<property name="build" value="build" />
+	<property name="classes" value="build/classes" />
+	<property name="main" value="bltipp.gui.MainFrame" />
+	<property name="testcase" value="bltipp.gui.test.Test" />
+	<property name="testsuite" value="bltipp.gui.test.Suite" />
+	<property name="lib" value="lib" />
+
+	<path id="classpath">
+		<fileset dir="${lib}" includes="**/*.jar" />
+		<fileset dir="${classes}" />
+	</path>
+
+	<target name="clean">
+		<delete dir="${build}" />
+	</target>
+
+	<target name="compile">
+		<mkdir dir="${classes}" />
+		<javac srcdir="${src}" destdir="${classes}" classpathref="classpath" />
+	</target>
+
+	<target name="runBLTipp" depends="compile">
+		<java classname="${main}" fork="true">
+			<classpath>
+				<pathelement location="${classes}" />
+				<fileset dir="${lib}" includes="**/*.jar" />
+			</classpath>
+		</java>
+	</target>
+
+</project>
