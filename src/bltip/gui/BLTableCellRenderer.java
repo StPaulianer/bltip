@@ -13,8 +13,7 @@ import java.awt.*;
  * verfeinert werden.
  *
  * @author Nico
- * @version 07.10.2004 todo es gibt viel f�r den GC zu tun, da bei Aufruf von getTableCell...
- *          immer ein neues Label gebraucht wird
+ * @version 07.10.2004
  */
 class BLTableCellRenderer implements TableCellRenderer {
 

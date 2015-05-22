@@ -17,7 +17,7 @@ import static bltip.common.Constants.COUNT_OF_WINNERS;
  * Stellt Methoden zur Ausgabe in XML bereit.
  *
  * @author Nico
- * @version 09.10.2004 todo mithilfe von DOM eine XML-Ausgabe oder so
+ * @version 09.10.2004
  */
 public class Printer {
 

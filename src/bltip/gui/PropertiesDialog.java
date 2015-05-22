@@ -179,7 +179,6 @@ public class PropertiesDialog extends JDialog implements ActionListener {
                 }
             } else {
                 // Der MainFrame kriegt keine Konf.-Datei, es wird abgebrochen
-                // todo k�nnt man wohl noch was besseres machen
                 dispose();
                 System.exit(0);
             }

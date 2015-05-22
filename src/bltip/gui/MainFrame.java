@@ -103,7 +103,6 @@ public class MainFrame extends JFrame implements ActionListener {
                     .KEY_DBURL_SUFFIX), cfg
                     .getProperty(PropertiesConstants.KEY_DB_MYSQL_DRIVER));
 
-            // todo gibt wohl Probleme, wenn die DB noch nicht erstellt wurde
             storesys.connect();
         } catch (BlTipException exc) {
             handle(exc);
@@ -118,7 +117,6 @@ public class MainFrame extends JFrame implements ActionListener {
         menubar.add(createWorkMenu());
         menubar.add(createDBMenu());
         menubar.add(createLookAndFeelMenu());
-        // todo K�nnt noch ein Tools-Men� dazu, zum Properties, User, Paarungen �ndern
         setJMenuBar(menubar);
 
         pack();
@@ -331,7 +329,6 @@ public class MainFrame extends JFrame implements ActionListener {
         }
     }
 
-    // todo mehr Kommunikation mit User, �berschrift etc.
     private void exportUsertable() {
         JFileChooser fc = new JFileChooser(root);
         int choice = fc.showSaveDialog(this);
@@ -354,7 +351,6 @@ public class MainFrame extends JFrame implements ActionListener {
         }
     }
 
-    // todo mehr Kommunikation mit User, �berschrift etc.
     private void exportTiptables() {
         JFileChooser fc = new JFileChooser(root);
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -397,12 +393,10 @@ public class MainFrame extends JFrame implements ActionListener {
         }
     }
 
-    // todo bisher nur beim Export neuen DBThread erstellen
     private void fillDB() {
         int choice = JOptionPane.showConfirmDialog(this, Messages.ENQUIRYMSG_DB_FILL, Messages.ENQUIRYTITLE_DB_FILL,
                 JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (choice == JOptionPane.YES_OPTION) {
-            // TODO die Files dringend mit einer Methode kriegen
             this.init_files_changed = false;
             final File games = new File(root, "paarungen.txt");
             final File user = new File(root, "tipper.txt");
@@ -456,7 +450,7 @@ public class MainFrame extends JFrame implements ActionListener {
      * Gibt dem <code>PropertiesDialog</code> die M�glichkeit, dem Hauptfenster die
      * Konfigurationsdatei mitzuteilen.
      *
-     * @param file Konfigurationsdatei todo das hier ist genauso wenig sch�n
+     * @param file Konfigurationsdatei
      */
     void setConfigFile(File file) {
         this.cfg_file = file;

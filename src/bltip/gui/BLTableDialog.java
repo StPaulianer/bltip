@@ -16,8 +16,7 @@ import java.awt.event.ActionListener;
  * Dieser Dialog zeigt die Bundesligatabelle an
  *
  * @author Nico
- * @version 07.10.2004 todo der OK-Button k�nnte initial ausgew�hlt sein todo durch Anklicken
- *          der �berschriften ein Umsortieren
+ * @version 07.10.2004
  */
 public class BLTableDialog extends JDialog implements ActionListener {
 

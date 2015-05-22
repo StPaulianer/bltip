@@ -9,7 +9,7 @@ import java.io.File;
 
 /**
  * @author Nico
- * @version 20.10.2004 todo
+ * @version 20.10.2004
  */
 public class StorageSystemThread extends Thread {
     public static final int EXPORT_USERTABLE = 0;
@@ -51,8 +51,6 @@ public class StorageSystemThread extends Thread {
                     break;
             }
         } catch (BlTipException e) {
-            // todo ich m�chte die hier nicht fangen, sondern eigentlich im
-            // Mainframe ausgeben
             e.printStackTrace();
         }
     }

@@ -13,9 +13,7 @@ import java.awt.*;
  * verfeinert werden.
  *
  * @author Nico
- * @version 27.09.2005 TODO es gibt viel f�r den GC zu tun, da bei Aufruf von getTableCell...
- *          immer ein neues Label gebraucht wird TODO die Farbe f�r den letzen Platz ist hart
- *          reingecodet.
+ * @version 27.09.2005
  */
 class UserTableCellRenderer implements TableCellRenderer {
 

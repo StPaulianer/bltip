@@ -16,7 +16,7 @@ import java.awt.event.WindowEvent;
  * Ergebnisse einzugeben.
  *
  * @author Nico
- * @version 05.10.2004 todo der OK-Button k�nnte initial ausgew�hlt sein
+ * @version 05.10.2004
  */
 public class GamesDialog extends JDialog implements ActionListener {
 

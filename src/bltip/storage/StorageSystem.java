@@ -16,10 +16,7 @@ import java.io.File;
  * GUI-Hauptfenster zugreift.
  *
  * @author Nico
- * @version 27.09.2005 TODO vielleicht k�nnt man statt File's (Input | Output)Streams �bergeben
- *          lassen, w�r besser f�r sp�ter mit Server und Client... allerdings macht es im
- *          Moment einige Probleme wegen des Verzeichnisses, dass man �bergibt, in dem die
- *          Tipps drin sind.
+ * @version 27.09.2005
  */
 public interface StorageSystem {
 

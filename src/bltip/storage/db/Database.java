@@ -647,7 +647,7 @@ public class Database implements StorageSystem {
      * <li>1. Punkte</li>
      * <li>2. Tordifferenz</li>
      * <li>3. Geschossene Tore</li>
-     * <li>4. Direkter Vergleich (TODO)</li>
+     * <li>4. Direkter Vergleich (derzeit nicht implementiert)</li>
      * </ul>
      *
      * @param teams Feld unsortierter Mannschaften, die �bergabe von <code>null</code> f�hrt zu
@@ -690,26 +690,6 @@ public class Database implements StorageSystem {
 
         return teams;
     }
-
-    /**
-     * Berechnet f�r punktgleiche Mannschaften den direkten Vergleich nach folgenden Kriterien:
-     * <ul>
-     * <li>1. Punkte im direkten Vergleich</li>
-     * <li>2. Tordifferenz im direkten Vergleich</li>
-     * <li>3. Geschossene Ausw�rtstore im direkten Vergleich</li>
-     * </ul>
-     * Die Mannschaften m�ssen schon mit Tabellenpl�tzen �bergeben werden, d.h., wenn drei
-     * Mannschaften vorher zusammen 2. waren, dann sind sie nach Ausf�hrung dieser Methode
-     * vielleicht 2., 3. und 4. (oder auch 2., 2. und 4.).
-     *
-     * @param teams Die punktgleichen Mannschaften, allerdings schon mit Tabellenpl�tzen, die
-     *            �bergabe von <code>null</code> f�hrt zu einer
-     *            <code>NullPointerException</code>.
-     * @throws BLTipException Bei Datenbankfehlern
-     */
-    // private void calculateComparison(Team[] teams) throws BLTipException {
-    // //TODO
-    // }
 
     /**
      * Gibt ein sortiertes Feld der Tipper zur�ck. Die Tipper werden hierbei nach ihren

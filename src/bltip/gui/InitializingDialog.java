@@ -14,7 +14,7 @@ import java.io.File;
  * Verzeichnis, in dem die Tipps liegen, angegeben werden k�nnen.
  *
  * @author Nico
- * @version 09.10.2004 todo icons etc.
+ * @version 09.10.2004
  */
 public class InitializingDialog extends JDialog implements ActionListener {
 
