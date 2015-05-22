@@ -15,7 +15,7 @@ import java.awt.event.WindowEvent;
  * Dieser Dialog zeigt die Spiele eines Spieltages an und erm�glicht es dem User, die
  * Ergebnisse einzugeben.
  *
- * @author <a href="mailto:nico.mischok@informatik.uni-oldenburg.de">Nico Mischok</a>
+ * @author Nico
  * @version 05.10.2004 todo der OK-Button k�nnte initial ausgew�hlt sein
  */
 public class GamesDialog extends JDialog implements ActionListener {
@@ -34,14 +34,13 @@ public class GamesDialog extends JDialog implements ActionListener {
     /**
      * Konstruktor
      *
-     * @param mainfr   Mainframe, von dem der Dialog aufgerufen wurde
+     * @param mfr      Mainframe, von dem der Dialog aufgerufen wurde
      * @param title    Titel des Dialogs
      * @param storesys Das Speicherungssystem, das die Daten zur Verf�gung stellt
      * @param round    Spieltag, dessen Spiele angezeigt werden sollen
      * @throws BlTipException Bei Fehlern auf unteren Ebenen
      */
     public GamesDialog(MainFrame mfr, String title, StorageSystem storesys, int round) throws BlTipException {
-
         super(mfr, title, true);
         this.mfr = mfr;
         this.storesys = storesys;
@@ -132,38 +131,6 @@ public class GamesDialog extends JDialog implements ActionListener {
     }
 
     /**
-     * um noch Zugriff zu haben, wenn nicht �ber "Beenden" beendet wird
-     */
-    private class MyWindowAdapter extends WindowAdapter {
-        @Override
-        public void windowClosing(WindowEvent event) {
-            try {
-                // Abbruch ohne Speichern?
-                boolean changed = false;
-                for (GamePanel aGamePanel : gamePanel) {
-                    if (aGamePanel.resultChanged()) {
-                        changed = true;
-                        break;
-                    }
-                }
-                if (changed) {
-                    int choice = JOptionPane.showConfirmDialog(getGamesDialog(), Messages.ENQUIRYMSG_SAVE_CHANGES,
-                            Messages.ENQUIRYTITLE_SAVE_CHANGES, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-                    if (choice == JOptionPane.YES_OPTION) {
-                        saveGames();
-                        dispose();
-                    } else if (choice == JOptionPane.NO_OPTION) {
-                        dispose();
-                    }
-                } else
-                    dispose();
-            } catch (BlTipException e) {
-                handle(e);
-            }
-        }
-    }
-
-    /**
      * Speichert die eingegebenen Ergebnisse
      *
      * @throws BlTipException Bei Fehlern auf unteren Ebenen
@@ -198,7 +165,39 @@ public class GamesDialog extends JDialog implements ActionListener {
      *
      * @return Der Dialog selbst
      */
-    GamesDialog getGamesDialog() {
+    private GamesDialog getGamesDialog() {
         return this;
+    }
+
+    /**
+     * um noch Zugriff zu haben, wenn nicht �ber "Beenden" beendet wird
+     */
+    private class MyWindowAdapter extends WindowAdapter {
+        @Override
+        public void windowClosing(WindowEvent event) {
+            try {
+                // Abbruch ohne Speichern?
+                boolean changed = false;
+                for (GamePanel aGamePanel : gamePanel) {
+                    if (aGamePanel.resultChanged()) {
+                        changed = true;
+                        break;
+                    }
+                }
+                if (changed) {
+                    int choice = JOptionPane.showConfirmDialog(getGamesDialog(), Messages.ENQUIRYMSG_SAVE_CHANGES,
+                            Messages.ENQUIRYTITLE_SAVE_CHANGES, JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                    if (choice == JOptionPane.YES_OPTION) {
+                        saveGames();
+                        dispose();
+                    } else if (choice == JOptionPane.NO_OPTION) {
+                        dispose();
+                    }
+                } else
+                    dispose();
+            } catch (BlTipException e) {
+                handle(e);
+            }
+        }
     }
 }

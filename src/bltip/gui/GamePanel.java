@@ -3,26 +3,23 @@
  */
 package bltip.gui;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
 import bltip.common.Constants;
 import bltip.valueobject.Game;
 
+import javax.swing.*;
+import java.awt.*;
+
 /**
  * Panel f�r ein Bundesligaspiel
- * 
- * @author <a href="mailto:nico.mischok@informatik.uni-oldenburg.de">Nico Mischok</a>
+ *
+ * @author Nico
  * @version 30.07.2005
  */
 public class GamePanel extends JPanel {
 
-    /** long <code>serialVersionUID</code>. */
+    /**
+     * long <code>serialVersionUID</code>.
+     */
     private static final long serialVersionUID = 8253579237405615433L;
 
     private final Game game;
@@ -31,7 +28,7 @@ public class GamePanel extends JPanel {
 
     /**
      * Konstruktor
-     * 
+     *
      * @param gm Bundesligaspiel
      */
     public GamePanel(Game gm) {
@@ -68,9 +65,6 @@ public class GamePanel extends JPanel {
     /**
      * Liefert die Information, ob ein Ergebnis eingegeben wurde, das noch nicht gespeichert
      * wurde
-     * 
-     * @param <code>true</code>, falls ein Ergebnis eingegeben wurde, das noch nicht
-     *        gespeichert wurde, <code>false</code> sonst
      */
     public boolean resultChanged() {
         try {
@@ -88,12 +82,12 @@ public class GamePanel extends JPanel {
      * Ist das Heim- oder das Auw�rtsergebnis nicht bzw. falsch eingegeben, wird ein Feld mit
      * zwei Eintr�gen der Form <code>bltipp.common.Constants#NO_RESULT</code> geliefert, also
      * niemals <code>null</code>.
-     * 
+     *
      * @return Heim- und Ausw�rtsergebnis in einem zweielementigen Array. Unter Index 0 ist das
-     *         Heimergebnis und unter Index 1 das Ausw�rtsergebnis gespeichert. Ist das Heim-
-     *         oder das Auw�rtsergebnis nicht bzw. falsch eingegeben, wird ein Feld mit zwei
-     *         Eintr�gen der Form <code>bltipp.common.Constants#NO_RESULT</code> geliefert,
-     *         also niemals <code>null</code>.
+     * Heimergebnis und unter Index 1 das Ausw�rtsergebnis gespeichert. Ist das Heim-
+     * oder das Auw�rtsergebnis nicht bzw. falsch eingegeben, wird ein Feld mit zwei
+     * Eintr�gen der Form <code>bltipp.common.Constants#NO_RESULT</code> geliefert,
+     * also niemals <code>null</code>.
      */
     public int[] getEntries() {
         try {
@@ -109,8 +103,10 @@ public class GamePanel extends JPanel {
         }
     }
 
-    /** Setzt die Ergebnisse in den Textfeldern neu */
-    void paintResult() {
+    /**
+     * Setzt die Ergebnisse in den Textfeldern neu
+     */
+    private void paintResult() {
         if (game.getHomeresult() != Constants.NO_RESULT && game.getGuestresult() != Constants.NO_RESULT) {
             homeresult.setText("" + game.getHomeresult());
             guestresult.setText("" + game.getGuestresult());

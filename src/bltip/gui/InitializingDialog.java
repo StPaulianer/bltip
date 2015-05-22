@@ -3,51 +3,39 @@
  */
 package bltip.gui;
 
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-
 /**
  * Ein Dialog, mit dem die Dateien, in denen die Paarungen, die Namen der Tipper und das
  * Verzeichnis, in dem die Tipps liegen, angegeben werden k�nnen.
- * 
- * @author <a href="mailto:nico.mischok@informatik.uni-oldenburg.de">Nico Mischok</a>
+ *
+ * @author Nico
  * @version 09.10.2004 todo icons etc.
  */
 public class InitializingDialog extends JDialog implements ActionListener {
 
-    /** long <code>serialVersionUID</code>. */
+    /**
+     * long <code>serialVersionUID</code>.
+     */
     private static final long serialVersionUID = -687546557721916026L;
-    private File games, user, tips;
     private final File root;
-
     private final MainFrame mfr;
     private JTextField path_games, path_user, path_tips;
     private JButton button_games, button_user, button_tips, ok, cancel;
 
     /**
      * Konstruktor initialisiert das Layout
-     * 
-     * @param mfr Hauptfenster, die �bergabe von <code>null</code> f�hrt zu einer
-     *            <code>NullPointerException</code>.
-     * @param title Titel des Fensters, die �bergabe von <code>null</code> ist nicht erlaubt.
+     *
+     * @param mfr  Hauptfenster, die �bergabe von <code>null</code> f�hrt zu einer
+     *             <code>NullPointerException</code>.
      * @param root Das BL-Tipp-Hauptverzeichnis, um es dem Benutzer etwas komfortabler zu
-     *            gestalten.
      */
-    public InitializingDialog(MainFrame mfr, String title, File root) {
-        super(mfr, title, true);
+    public InitializingDialog(MainFrame mfr, File root) {
+        super(mfr, Messages.TITLE_INIT_DIALOG, true);
         this.mfr = mfr;
         this.root = root;
 
@@ -131,7 +119,7 @@ public class InitializingDialog extends JDialog implements ActionListener {
             JFileChooser fc = new JFileChooser(root);
             int choice = fc.showOpenDialog(this);
             if (choice != JFileChooser.CANCEL_OPTION) {
-                games = fc.getSelectedFile();
+                File games = fc.getSelectedFile();
                 path_games.setText(games.toString());
             }
 
@@ -139,7 +127,7 @@ public class InitializingDialog extends JDialog implements ActionListener {
             JFileChooser fc = new JFileChooser(root);
             int choice = fc.showOpenDialog(this);
             if (choice != JFileChooser.CANCEL_OPTION) {
-                user = fc.getSelectedFile();
+                File user = fc.getSelectedFile();
                 path_user.setText(user.toString());
             }
 
@@ -148,12 +136,12 @@ public class InitializingDialog extends JDialog implements ActionListener {
             fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             int choice = fc.showOpenDialog(this);
             if (choice != JFileChooser.CANCEL_OPTION) {
-                tips = fc.getSelectedFile();
+                File tips = fc.getSelectedFile();
                 path_tips.setText(tips.toString());
             }
 
         } else if (src.equals(ok)) {
-            mfr.setInitFiles(games, user, tips);
+            mfr.setInitFiles();
             dispose();
 
         } else if (src.equals(cancel)) {

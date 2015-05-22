@@ -1,24 +1,20 @@
 package bltip.storage.db;
 
-import static bltip.storage.db.DBTablesAndStatements.CREATE_GAME_TABLE;
-import static bltip.storage.db.DBTablesAndStatements.CREATE_TEAM_TABLE;
-import static bltip.storage.db.DBTablesAndStatements.CREATE_TIP_TABLE;
-import static bltip.storage.db.DBTablesAndStatements.CREATE_USER_TABLE;
-import static bltip.storage.db.DBTablesAndStatements.CREATE_USER_TIPTABLES_TABLE;
+import bltip.common.BlTipException;
+import bltip.gui.Messages;
+import bltip.util.BlTipUtility;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import bltip.common.BlTipException;
-import bltip.gui.Messages;
-import bltip.util.BlTipUtility;
+import static bltip.storage.db.DBTablesAndStatements.*;
 
 /**
  * Klasse zum Erstellen der Datenbank
- * 
- * @author <a href="mailto:nico.mischok@informatik.uni-oldenburg.de">Nico Mischok</a>
+ *
+ * @author Nico
  * @version 28.08.2006
  */
 class DBCreator {
@@ -27,19 +23,19 @@ class DBCreator {
 
     /**
      * Erstellt eine neue Datenbankverbindung mit den �bergebenen Parameter
-     * 
-     * @param user User der Datenbank, die �bergabe von <code>null</code> ist erlaubt, eine
-     *            Verbindung zu einer Datenbank dann aber unrealistisch...
-     * @param pwd Passwort des User, die �bergabe von <code>null</code> ist erlaubt, eine
-     *            Verbindung zu einer Datenbank dann aber unrealistisch...
-     * @param name Name der Datenbank, die �bergabe von <code>null</code> ist erlaubt, eine
-     *            Verbindung zu einer Datenbank dann aber unrealistisch...
-     * @param url URL der Datenbank, die �bergabe von <code>null</code> ist erlaubt, eine
-     *            Verbindung zu einer Datenbank dann aber unrealistisch...
-     * @param url_suffix Ein Anh�ngsel zur URL der Datenbank, die �bergabe von
-     *            <code>null</code> ist erlaubt.
+     *
+     * @param user         User der Datenbank, die �bergabe von <code>null</code> ist erlaubt, eine
+     *                     Verbindung zu einer Datenbank dann aber unrealistisch...
+     * @param pwd          Passwort des User, die �bergabe von <code>null</code> ist erlaubt, eine
+     *                     Verbindung zu einer Datenbank dann aber unrealistisch...
+     * @param name         Name der Datenbank, die �bergabe von <code>null</code> ist erlaubt, eine
+     *                     Verbindung zu einer Datenbank dann aber unrealistisch...
+     * @param url          URL der Datenbank, die �bergabe von <code>null</code> ist erlaubt, eine
+     *                     Verbindung zu einer Datenbank dann aber unrealistisch...
+     * @param url_suffix   Ein Anh�ngsel zur URL der Datenbank, die �bergabe von
+     *                     <code>null</code> ist erlaubt.
      * @param mysql_driver Der verwendete MySQL-Treiber, die �bergabe von <code>null</code> ist
-     *            erlaubt, eine Verbindung zu einer Datenbank dann aber unrealistisch...
+     *                     erlaubt, eine Verbindung zu einer Datenbank dann aber unrealistisch...
      * @throws BlTipException Bei Datenbank- oder I/O-Fehlern
      */
     public void createDatabase(String user, String pwd, String name, String url, String url_suffix, String mysql_driver)
@@ -116,16 +112,16 @@ class DBCreator {
 
     /**
      * Regelt das Exception-Handling
-     * 
-     * @param e Ausnahme
+     *
+     * @param e     Ausnahme
      * @param title Titel des Fehlerfensters
-     * @param msg Fehlernachricht an den Benutzer
+     * @param msg   Fehlernachricht an den Benutzer
      * @throws BlTipException Bei Datenbank- oder I/O-Fehlern
      */
     private void handle(Exception e, String title, String msg) throws BlTipException {
         if (e != null) {
             e.printStackTrace();
-            throw new BlTipException(e, title, msg);
+            throw new BlTipException(title, msg);
         } else
             throw new BlTipException(title, msg);
     }
@@ -133,7 +129,7 @@ class DBCreator {
     /**
      * Methode zur Ausgabe von Uhrzeit + Statusmeldung �ber den System.out.println - Stream,
      * wenn DEBUG = true ist.
-     * 
+     *
      * @param str Statusmeldung
      */
     private void wln(String str) {
@@ -144,7 +140,7 @@ class DBCreator {
 
     /**
      * Methode zur Ausgabe von SQL-Statements �ber den System.out.println - Stream
-     * 
+     *
      * @param str Statusmeldung
      */
     private void wlnStmt(String str) {

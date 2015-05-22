@@ -3,34 +3,6 @@
  */
 package bltip.storage.db;
 
-import static bltip.storage.db.DBTablesAndStatements.DBTABLE_GAMES;
-import static bltip.storage.db.DBTablesAndStatements.DBTABLE_TEAMS;
-import static bltip.storage.db.DBTablesAndStatements.DBTABLE_USER;
-import static bltip.storage.db.DBTablesAndStatements.GAMES_GUESTRESULT;
-import static bltip.storage.db.DBTablesAndStatements.GAMES_HOMERESULT;
-import static bltip.storage.db.DBTablesAndStatements.GAMES_ID;
-import static bltip.storage.db.DBTablesAndStatements.TEAMS_GGOALS;
-import static bltip.storage.db.DBTablesAndStatements.TEAMS_GGOALSAG;
-import static bltip.storage.db.DBTablesAndStatements.TEAMS_GLOSES;
-import static bltip.storage.db.DBTablesAndStatements.TEAMS_GREMIS;
-import static bltip.storage.db.DBTablesAndStatements.TEAMS_GWINS;
-import static bltip.storage.db.DBTablesAndStatements.TEAMS_HGOALS;
-import static bltip.storage.db.DBTablesAndStatements.TEAMS_HGOALSAG;
-import static bltip.storage.db.DBTablesAndStatements.TEAMS_HLOSES;
-import static bltip.storage.db.DBTablesAndStatements.TEAMS_HREMIS;
-import static bltip.storage.db.DBTablesAndStatements.TEAMS_HWINS;
-import static bltip.storage.db.DBTablesAndStatements.TEAMS_NAME;
-import static bltip.storage.db.DBTablesAndStatements.USER_ID;
-import static bltip.storage.db.DBTablesAndStatements.USER_NAME;
-import static bltip.storage.db.DBTablesAndStatements.USER_TABLESCORE;
-import static bltip.storage.db.DBTablesAndStatements.USER_TIPSCORE;
-
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.HashMap;
-
 import bltip.common.BlTipException;
 import bltip.common.Constants;
 import bltip.gui.Messages;
@@ -39,10 +11,19 @@ import bltip.valueobject.Game;
 import bltip.valueobject.Team;
 import bltip.valueobject.User;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
+
+import static bltip.storage.db.DBTablesAndStatements.*;
+
 /**
  * Verwaltet die Objekte, bevor sie in die Datenbank geschrieben werden.
- * 
- * @author <a href="mailto:nico.mischok@informatik.uni-oldenburg.de">Nico Mischok</a>
+ *
+ * @author Nico
  * @version 28.08.2006
  */
 class ObjectSaver {
@@ -51,7 +32,7 @@ class ObjectSaver {
 
     private Team[] teams;
 
-    private HashMap<Integer, User> user;
+    private Map<Integer, User> user;
 
     private Game[] games;
 
@@ -59,13 +40,13 @@ class ObjectSaver {
         try {
             this.stmt = conn.createStatement();
         } catch (SQLException e) {
-            handle(e, Messages.ERRORTITLE_DB_GENERAL, e.getMessage());
+            handle(e, e.getMessage());
         }
     }
 
     /**
      * L�dt die Daten aus der Datenbank und speichert sie als Objekte.
-     * 
+     *
      * @throws BlTipException
      */
     void load() throws BlTipException {
@@ -75,7 +56,7 @@ class ObjectSaver {
 
     /**
      * Schreibt die Objekte in die Datenbank.
-     * 
+     *
      * @throws BlTipException
      */
     void save() throws BlTipException {
@@ -97,11 +78,7 @@ class ObjectSaver {
         return this.teams;
     }
 
-    protected User getUser(int id) {
-        return user.get(new Integer(id));
-    }
-
-    HashMap<Integer, User> getUser() {
+    Map<Integer, User> getUser() {
         return this.user;
     }
 
@@ -122,20 +99,20 @@ class ObjectSaver {
             while (result.next()) {
                 teams[index++] = new Team(result.getString(TEAMS_NAME), result.getInt(TEAMS_HWINS), result.getInt(TEAMS_GWINS),
                         result.getInt(TEAMS_HREMIS), result.getInt(TEAMS_GREMIS), result.getInt(TEAMS_HLOSES), result
-                                .getInt(TEAMS_GLOSES), result.getInt(TEAMS_HGOALS), result.getInt(TEAMS_GGOALS), result
-                                .getInt(TEAMS_HGOALSAG), result.getInt(TEAMS_GGOALSAG));
+                        .getInt(TEAMS_GLOSES), result.getInt(TEAMS_HGOALS), result.getInt(TEAMS_GGOALS), result
+                        .getInt(TEAMS_HGOALSAG), result.getInt(TEAMS_GGOALSAG));
             }
 
             result.close();
         } catch (SQLException e) {
-            handle(e, Messages.ERRORTITLE_DB_GENERAL, e.getMessage());
+            handle(e, e.getMessage());
         }
 
         return teams;
     }
 
-    private HashMap<Integer, User> getUserFromDB() throws BlTipException {
-        HashMap<Integer, User> users = new HashMap<Integer, User>();
+    private Map<Integer, User> getUserFromDB() throws BlTipException {
+        Map<Integer, User> users = new HashMap<>();
 
         String getAllUser = "SELECT * FROM " + DBTABLE_USER + ";";
 
@@ -150,7 +127,7 @@ class ObjectSaver {
 
             result.close();
         } catch (SQLException e) {
-            handle(e, Messages.ERRORTITLE_DB_GENERAL, e.getMessage());
+            handle(e, e.getMessage());
         }
 
         return users;
@@ -175,7 +152,7 @@ class ObjectSaver {
 
             this.stmt.executeBatch();
         } catch (SQLException e) {
-            handle(e, Messages.ERRORTITLE_DB_GENERAL, e.getMessage());
+            handle(e, e.getMessage());
         }
     }
 
@@ -192,7 +169,7 @@ class ObjectSaver {
 
             this.stmt.executeBatch();
         } catch (SQLException e) {
-            handle(e, Messages.ERRORTITLE_DB_GENERAL, e.getMessage());
+            handle(e, e.getMessage());
         }
     }
 
@@ -209,29 +186,28 @@ class ObjectSaver {
 
             this.stmt.executeBatch();
         } catch (SQLException e) {
-            handle(e, Messages.ERRORTITLE_DB_GENERAL, e.getMessage());
+            handle(e, e.getMessage());
         }
     }
 
     /**
      * Regelt das Exception-Handling
-     * 
-     * @param e Tats�chlich aufgetretene Ausnahme
-     * @param title Titel des Fehlerfensters
+     *
+     * @param e   Tats�chlich aufgetretene Ausnahme
      * @param msg Nachricht im Fehlerfenster
      * @throws BlTipException Bei Datenbankfehlern
      */
-    private void handle(Exception e, String title, String msg) throws BlTipException {
+    private void handle(Exception e, String msg) throws BlTipException {
         if (e != null) {
             e.printStackTrace();
-            throw new BlTipException(e, title, msg);
+            throw new BlTipException(Messages.ERRORTITLE_DB_GENERAL, msg);
         } else
-            throw new BlTipException(title, msg);
+            throw new BlTipException(Messages.ERRORTITLE_DB_GENERAL, msg);
     }
 
     /**
      * Methode zur Ausgabe von SQL-Statements �ber den System.out.println - Stream
-     * 
+     *
      * @param str Statusmeldung
      */
     private void wlnStmt(String str) {

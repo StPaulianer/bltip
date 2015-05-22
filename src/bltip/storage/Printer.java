@@ -3,33 +3,31 @@
  */
 package bltip.storage;
 
-import static bltip.common.Constants.COUNT_OF_WINNERS;
-
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-
 import bltip.common.BlTipException;
 import bltip.gui.Messages;
 import bltip.util.BlTipUtility;
 import bltip.valueobject.Team;
 import bltip.valueobject.User;
 
+import java.io.*;
+
+import static bltip.common.Constants.COUNT_OF_WINNERS;
+
 /**
  * Stellt Methoden zur Ausgabe in XML bereit.
  *
- * @author <a href="mailto:nico.mischok@informatik.uni-oldenburg.de">Nico Mischok</a>
+ * @author Nico
  * @version 09.10.2004 todo mithilfe von DOM eine XML-Ausgabe oder so
  */
 public class Printer {
 
-    /***************************************************************************
-     *
+    /**
+     * ************************************************************************
+     * <p>
      * HTML-Ausgabe
-     *
-     **************************************************************************/
+     * <p>
+     * ************************************************************************
+     */
 
     private static final String COLOR_WINNERS = "#FF0000";
 
@@ -37,7 +35,7 @@ public class Printer {
      * Gibt alle getippten Tabellen der Mittipper in HTML aus
      *
      * @param storesys Speicherungssystem, das die Daten zur Verf�gung stellt.
-     * @param parent <b>Verzeichnis</b>, in das die getippten Tabellen kommen
+     * @param parent   <b>Verzeichnis</b>, in das die getippten Tabellen kommen
      * @throws BlTipException Bei Fehlern auf unteren Ebenen
      */
     public void printAllTiptables(StorageSystem storesys, File parent) throws BlTipException {
@@ -57,11 +55,11 @@ public class Printer {
     /**
      * Erstellt mit den �bergebenen Strings eine HTML-Seite ohne irgendein Design.
      *
-     * @param title Titel der Seite
-     * @param header �berschrift
+     * @param title   Titel der Seite
+     * @param header  �berschrift
      * @param content Inhalt, damit es gut aussieht, bitte mit Zeilenumbr�chen �bergeben und
-     *            jede Zeile mit drei Tabulatoren beginnen.
-     * @param file Datei, in die geschrieben werden soll
+     *                jede Zeile mit drei Tabulatoren beginnen.
+     * @param file    Datei, in die geschrieben werden soll
      * @throws BlTipException Bei Fehlern auf unteren Ebenen
      */
     public void printHTMLSite(String title, String header, String content, File file) throws BlTipException {
@@ -87,7 +85,7 @@ public class Printer {
 
             out.flush();
         } catch (IOException e) {
-            handle(e, Messages.ERRORTITLE_IO_GENERAL, e.getMessage());
+            handle(e, e.getMessage());
         } finally {
             if (out != null) {
                 out.close();
@@ -133,7 +131,7 @@ public class Printer {
      *
      * @param teams BL-Tabelle
      */
-    String getHTMLBLTable(Team[] teams) {
+    private String getHTMLBLTable(Team[] teams) {
         String html_bltable = "\t\t\t<table width=\"75%\" border=\"1\";" + " cellpadding=\"2\" cellspacing=\"0\">\n"
                 + "\t\t\t  <tr>\n" + "\t\t\t    <th width=\"5%\">Platz</th>\n" + "\t\t\t    <th " +
                 "width=\"45%\">Name</th>\n"
@@ -159,16 +157,15 @@ public class Printer {
     /**
      * Regelt das Exception-Handling
      *
-     * @param e Tats�chlich aufgetretene Ausnahme
-     * @param title Titel des Fehlerfensters
+     * @param e   Tats�chlich aufgetretene Ausnahme
      * @param msg Nachricht im Fehlerfenster
      * @throws BlTipException Bei I/O-Fehlern
      */
-    private void handle(Exception e, String title, String msg) throws BlTipException {
+    private void handle(Exception e, String msg) throws BlTipException {
         if (e != null) {
             e.printStackTrace();
-            throw new BlTipException(e, title, msg);
+            throw new BlTipException(Messages.ERRORTITLE_IO_GENERAL, msg);
         } else
-            throw new BlTipException(title, msg);
+            throw new BlTipException(Messages.ERRORTITLE_IO_GENERAL, msg);
     }
 }

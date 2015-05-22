@@ -10,11 +10,14 @@ import bltip.util.BlTipUtility;
 
 import javax.swing.*;
 import java.awt.event.*;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 /**
- * @author <a href="mailto:nico.mischok@informatik.uni-oldenburg.de">Nico Mischok</a>
+ * @author Nico
  * @version 30.07.2005
  */
 public class MainFrame extends JFrame implements ActionListener {
@@ -35,7 +38,6 @@ public class MainFrame extends JFrame implements ActionListener {
 
     private final Properties profile;
     private StorageSystem storesys;
-    private File games, user, tips;
     private File cfg_file;
     private File root;
     private boolean init_files_changed = false;
@@ -46,11 +48,9 @@ public class MainFrame extends JFrame implements ActionListener {
 
     /**
      * Konstruktor
-     *
-     * @param title Titel des Frames
      */
-    private MainFrame(String title) {
-        super(title);
+    private MainFrame() {
+        super(Messages.TITLE_MAINFRAME);
 
         wln("loading profile");
         Properties cfg = new Properties();
@@ -60,12 +60,17 @@ public class MainFrame extends JFrame implements ActionListener {
             profile.load(new FileInputStream(PropertiesConstants.PROFILE));
             String look_and_feel = profile.getProperty(PropertiesConstants.PROFILEKEY_LOOK_AND_FEEL);
             if (look_and_feel != null) {
-                if (look_and_feel.equals(GUIConstants.LAFID_METAL))
-                    changeLookAndFeel(GUIConstants.PLAF_METAL);
-                else if (look_and_feel.equals(GUIConstants.LAFID_WINDOWS))
-                    changeLookAndFeel(GUIConstants.PLAF_WINDOWS);
-                else
-                    changeLookAndFeel(GUIConstants.PLAF_MOTIF);
+                switch (look_and_feel) {
+                    case GUIConstants.LAFID_METAL:
+                        changeLookAndFeel(GUIConstants.PLAF_METAL);
+                        break;
+                    case GUIConstants.LAFID_WINDOWS:
+                        changeLookAndFeel(GUIConstants.PLAF_WINDOWS);
+                        break;
+                    default:
+                        changeLookAndFeel(GUIConstants.PLAF_MOTIF);
+                        break;
+                }
             }
 
             String path_cfg_file = profile.getProperty(PropertiesConstants.PROFILEKEY_PROP_FILE);
@@ -78,7 +83,7 @@ public class MainFrame extends JFrame implements ActionListener {
             // enth�lt, tut er dies nicht, wird im PropertiesDialog komplett abgebrochen.
             changeLookAndFeel(GUIConstants.PLAF_MOTIF);
 
-            PropertiesDialog pd = new PropertiesDialog(this, Messages.TITLE_PROP_DIALOG);
+            PropertiesDialog pd = new PropertiesDialog(this);
             pd.setLocation(GUIConstants.LOCATION_X, GUIConstants.LOCATION_Y);
             pd.setVisible(true);
         }
@@ -88,7 +93,7 @@ public class MainFrame extends JFrame implements ActionListener {
                 cfg.load(new FileInputStream(this.cfg_file));
                 this.root = new File(cfg.getProperty(PropertiesConstants.KEY_ROOT_PATH));
             } catch (Exception e) {
-                handle(e, Messages.ERRORTITLE_IO_GENERAL, e.getMessage());
+                handle(e, e.getMessage());
             }
 
             wln("connecting to db");
@@ -125,6 +130,17 @@ public class MainFrame extends JFrame implements ActionListener {
      * 
      * **************************************************************************
      */
+
+    /**
+     * Main-Methode
+     *
+     * @param args unbenutzt
+     */
+    public static void main(String[] args) {
+        MainFrame mfr = new MainFrame();
+        mfr.setLocation(GUIConstants.LOCATION_X, GUIConstants.LOCATION_Y);
+        mfr.setVisible(true);
+    }
 
     private JMenu createFileMenu() {
         JMenu ret = new JMenu(GUIConstants.FILEMENU_TITLE);
@@ -392,9 +408,9 @@ public class MainFrame extends JFrame implements ActionListener {
             final File user = new File(root, "tipper.txt");
             final File tips = new File(root, "Tipps");
             if (games.exists() && user.exists() && tips.exists()) {
-                setInitFiles(games, user, tips);
+                setInitFiles();
             } else {
-                InitializingDialog initd = new InitializingDialog(this, Messages.TITLE_INIT_DIALOG, root);
+                InitializingDialog initd = new InitializingDialog(this, root);
                 initd.setLocation(GUIConstants.LOCATION_X, GUIConstants.LOCATION_Y);
                 initd.setVisible(true);
             }
@@ -431,16 +447,8 @@ public class MainFrame extends JFrame implements ActionListener {
     /**
      * Gibt dem <code>InitializingDialog</code> die M�glichkeit, die Dateien zu setzen, die mit
      * diesem Dialog einzugeben sind.
-     *
-     * @param games Datei, die die Paarungen enth�lt.
-     * @param user  Datei, die die Tipper enth�lt.
-     * @param tips  Verzeichnis, das die Dateien mit den Tipps enth�lt. todo das hier ist gar
-     *              nicht sch�n
      */
-    void setInitFiles(File games, File user, File tips) {
-        this.games = games;
-        this.user = user;
-        this.tips = tips;
+    void setInitFiles() {
         this.init_files_changed = true;
     }
 
@@ -470,10 +478,8 @@ public class MainFrame extends JFrame implements ActionListener {
                 profile.setProperty(PropertiesConstants.PROFILEKEY_PROP_FILE, this.cfg_file.toString());
                 profile.setProperty(PropertiesConstants.PROFILEKEY_LOOK_AND_FEEL, look_and_feel);
                 profile.store(new FileOutputStream(PropertiesConstants.PROFILE), "Profile");
-            } catch (FileNotFoundException exc) {
-                handle(exc, Messages.ERRORTITLE_IO_GENERAL, exc.getMessage());
             } catch (IOException exc) {
-                handle(exc, Messages.ERRORTITLE_IO_GENERAL, exc.getMessage());
+                handle(exc, exc.getMessage());
             }
         } catch (BlTipException e) {
             handle(e);
@@ -483,29 +489,18 @@ public class MainFrame extends JFrame implements ActionListener {
     }
 
     /**
-     * um noch Zugriff zu haben, wenn nicht �ber "Beenden" beendet wird
-     */
-    private class MyWindowAdapter extends WindowAdapter {
-        @Override
-        public void windowClosing(WindowEvent event) {
-            closeAndExit();
-        }
-    }
-
-    /**
      * Regelt das Exception-Handling
      *
-     * @param e     Tats�chlich aufgetretene Ausnahme
-     * @param title Titel des Fehlerfensters
-     * @param msg   Nachricht im Fehlerfenster
+     * @param e   Tats�chlich aufgetretene Ausnahme
+     * @param msg Nachricht im Fehlerfenster
      * @throws BlTipException Bei Datenbankfehlern
      */
-    private void handle(Exception e, String title, String msg) throws BlTipException {
+    private void handle(Exception e, String msg) throws BlTipException {
         if (e != null) {
             e.printStackTrace();
-            throw new BlTipException(e, title, msg);
+            throw new BlTipException(Messages.ERRORTITLE_IO_GENERAL, msg);
         } else
-            throw new BlTipException(title, msg);
+            throw new BlTipException(Messages.ERRORTITLE_IO_GENERAL, msg);
     }
 
     /**
@@ -533,13 +528,12 @@ public class MainFrame extends JFrame implements ActionListener {
     }
 
     /**
-     * Main-Methode
-     *
-     * @param args unbenutzt
+     * um noch Zugriff zu haben, wenn nicht �ber "Beenden" beendet wird
      */
-    public static void main(String[] args) {
-        MainFrame mfr = new MainFrame(Messages.TITLE_MAINFRAME);
-        mfr.setLocation(GUIConstants.LOCATION_X, GUIConstants.LOCATION_Y);
-        mfr.setVisible(true);
+    private class MyWindowAdapter extends WindowAdapter {
+        @Override
+        public void windowClosing(WindowEvent event) {
+            closeAndExit();
+        }
     }
 }

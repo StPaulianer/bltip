@@ -3,24 +3,28 @@
  */
 package bltip.gui;
 
-import javax.swing.table.AbstractTableModel;
-
 import bltip.valueobject.User;
 
+import javax.swing.table.AbstractTableModel;
+
 /**
- * @author <a href="mailto:nico.mischok@informatik.uni-oldenburg.de">Nico Mischok</a>
+ * @author Nico
  * @version 30.07.2005
  */
 public class UserTableModel extends AbstractTableModel {
 
-    /** long <code>serialVersionUID</code>. */
+    /**
+     * long <code>serialVersionUID</code>.
+     */
     private static final long serialVersionUID = -2462369361828703146L;
-    /** Die Tabelle der Tipper */
+    /**
+     * Die Tabelle der Tipper
+     */
     private final User[] user;
 
     /**
      * Konstruktor
-     * 
+     *
      * @param user Die Tabelle der User
      */
     public UserTableModel(User[] user) {
@@ -52,16 +56,16 @@ public class UserTableModel extends AbstractTableModel {
      */
     public Object getValueAt(int row, int column) {
         switch (column) {
-        case 0:
-            return row + 1;
-        case 1:
-            return this.user[row].getName();
-        case 2:
-            return this.user[row].getTipscore();
-        case 3:
-            return this.user[row].getTablescore();
-        case 4:
-            return this.user[row].getScore();
+            case 0:
+                return row + 1;
+            case 1:
+                return this.user[row].getName();
+            case 2:
+                return this.user[row].getTipscore();
+            case 3:
+                return this.user[row].getTablescore();
+            case 4:
+                return this.user[row].getScore();
         }
 
         return null;

@@ -3,16 +3,15 @@
  */
 package bltip.util;
 
+import bltip.storage.db.DBTablesAndStatements;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import bltip.common.BlTipException;
-import bltip.storage.db.DBTablesAndStatements;
-
 /**
  * Wie der Name schon sagt, stellt n�tzliche Methoden zur Verf�gung.
- * 
- * @author <a href="mailto:nico.mischok@informatik.uni-oldenburg.de">Nico Mischok</a>
+ *
+ * @author Nico
  * @version 09.10.2004
  */
 public class BlTipUtility {
@@ -23,11 +22,10 @@ public class BlTipUtility {
     /**
      * Macht einen String "SQL-fertig". Alle Escapesequenzen werden durch Backslash + Sequenz
      * ersetzt
-     * 
+     *
      * @param str Zu maskierender String
      * @return Maskierter String, niemals <code>null</code>, wird <code>null</code> �bergeben,
-     *         dann wird der String <code>NULL</code> geliefert (MySQL-Null).
-     * @throws BlTipException Bei I/O-Fehlern
+     * dann wird der String <code>NULL</code> geliefert (MySQL-Null).
      */
     public static String maskToSQL(String str) {
         if (str == null)
@@ -72,7 +70,7 @@ public class BlTipUtility {
 
     /**
      * Liefert das aktuelle Datum und die aktuelle Uhrzeit als formatierten String
-     * 
+     *
      * @return aktuelles Datum und die aktuelle Uhrzeit im Format dd.MM.yyyy '-' HH:mm
      */
     public static String currentTime() {
@@ -83,7 +81,7 @@ public class BlTipUtility {
 
     /**
      * Liefert das aktuelle Datum
-     * 
+     *
      * @return aktuelles Datum im Format dd.MM.yyyy
      */
     public static String currentDate() {

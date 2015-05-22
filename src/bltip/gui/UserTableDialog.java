@@ -15,16 +15,11 @@ import java.awt.event.ActionListener;
 /**
  * Dieser Dialog zeigt die Tabelle der Tipper an
  *
- * @author <a href="mailto:nico.mischok@informatik.uni-oldenburg.de">Nico Mischok</a>
+ * @author Nico
  * @version 07.10.2004 todo der OK-Button k�nnte initial ausgew�hlt sein todo durch Anklicken
  *          der �berschriften ein Umsortieren
  */
 public class UserTableDialog extends JDialog implements ActionListener {
-
-    /**
-     * long <code>serialVersionUID</code>.
-     */
-    private static final long serialVersionUID = 2342473186574308369L;
 
     /**
      * Die Tabellen�berschriften<br>
@@ -32,7 +27,10 @@ public class UserTableDialog extends JDialog implements ActionListener {
      * <code>COLHEADS.length</code>
      */
     public static final Object[] COLHEADS = {"Pl.", "Name", "Tipp", "Tab.", "Gesamt"};
-
+    /**
+     * long <code>serialVersionUID</code>.
+     */
+    private static final long serialVersionUID = 2342473186574308369L;
     /**
      * Button
      */
@@ -51,7 +49,7 @@ public class UserTableDialog extends JDialog implements ActionListener {
         // Spaltenmodell erzeugen
         DefaultTableColumnModel cm = new DefaultTableColumnModel();
         for (int i = 0; i < COLHEADS.length; i++) {
-            TableColumn col = null;
+            TableColumn col;
             switch (i) {
                 case 0:
                     col = new TableColumn(i, 5);

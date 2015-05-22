@@ -15,44 +15,23 @@ import bltip.valueobject.User;
 
 import java.io.File;
 import java.sql.*;
-import java.util.HashMap;
+import java.util.Map;
 
-import static bltip.common.Constants.CHAMPION_PLACE;
-import static bltip.common.Constants.COUNT_OF_TEAMS;
-import static bltip.common.Constants.FIRST_DOWNSWINGER_PLACE;
-import static bltip.common.Constants.LAST_CL_PLACE;
-import static bltip.common.Constants.LAST_EL_PLACE;
-import static bltip.common.Constants.NO_RESULT;
-import static bltip.common.Constants.NO_SCORES;
-import static bltip.common.Constants.TABLESCORE_FOR_RIGHT_CHAMPION;
-import static bltip.common.Constants.TABLESCORE_FOR_RIGHT_CL;
-import static bltip.common.Constants.TABLESCORE_FOR_RIGHT_DOWNSWINGER;
-import static bltip.common.Constants.TABLESCORE_FOR_RIGHT_POSITION;
-import static bltip.common.Constants.TABLESCORE_FOR_RIGHT_UEFACUP;
-import static bltip.common.Constants.TIPSCORE_FOR_CORRECT_DRAW;
-import static bltip.common.Constants.TIPSCORE_FOR_CORRECT_JOKER;
-import static bltip.common.Constants.TIPSCORE_FOR_CORRECT_TIP;
-import static bltip.common.Constants.TIPSCORE_FOR_DIFFERENCE;
-import static bltip.common.Constants.TIPSCORE_FOR_INCORRECT_DRAW;
-import static bltip.common.Constants.TIPSCORE_FOR_INCORRECT_JOKER;
-import static bltip.common.Constants.TIPSCORE_FOR_TENDENCY;
 import static bltip.storage.db.DBTablesAndStatements.*;
 
 /**
  * Implementiert ein Speicherungssystem als MySQL-Datenbank.
  *
- * @author <a href="mailto:nico.mischok@informatik.uni-oldenburg.de">Nico Mischok</a>
+ * @author Nico
  * @version 28.08.2006
  */
 public class Database implements StorageSystem {
-
-    private static final boolean DEBUG = true;
 
     /**
      * Sollen die SQL-Statements ausgegeben werden?
      */
     public static final boolean WRITE_STMTS = false;
-
+    private static final boolean DEBUG = true;
     private final String dbuser, dbpasswd, dbname, dburl, dburlSuffix, mysqlDriver;
 
     private Connection conn;
@@ -78,7 +57,6 @@ public class Database implements StorageSystem {
      *                     erlaubt, eine Verbindung zu einer Datenbank dann aber unrealistisch...
      */
     public Database(String user, String pwd, String name, String url, String url_suffix, String mysql_driver) {
-
         this.dbuser = user;
         this.dbpasswd = pwd;
         this.dbname = name;
@@ -304,6 +282,7 @@ public class Database implements StorageSystem {
      * @see bltipp.storage.StorageSystem#getUsertable()
      */
     public User[] getUsertable() throws BlTipException {
+        ResultSet result = null;
         try {
             int count = this.getCountOfUser();
             if (count != -1) {
@@ -311,7 +290,7 @@ public class Database implements StorageSystem {
 
                 String getAllUser = "SELECT * FROM " + DBTABLE_USER + ";";
                 wlnStmt(getAllUser);
-                ResultSet result = stmt.executeQuery(getAllUser);
+                result = stmt.executeQuery(getAllUser);
 
                 int index = 0;
                 while (result.next()) {
@@ -322,11 +301,18 @@ public class Database implements StorageSystem {
 
                 sort(user);
 
-                result.close();
                 return user;
             }
         } catch (SQLException e) {
             handle(e, Messages.ERRORTITLE_DB_GENERAL, e.getMessage());
+        } finally {
+            if (result != null) {
+                try {
+                    result.close();
+                } catch (SQLException e) {
+                    // ignore
+                }
+            }
         }
 
         return null;
@@ -349,7 +335,7 @@ public class Database implements StorageSystem {
 
             int index = 0;
             while (result.next()) {
-                games[index] = new Game(result.getInt(GAMES_ID), result.getInt(GAMES_ROUND),
+                games[index] = new Game(result.getInt(GAMES_ID),
                         result.getString(GAMES_HOMETEAM),
                         result.getString(GAMES_GUESTTEAM), result.getInt(GAMES_HOMERESULT),
                         result.getInt(GAMES_GUESTRESULT));
@@ -469,7 +455,6 @@ public class Database implements StorageSystem {
      * <li><b>Joker</b>: 5 Punkte mehr, wenn zumindest Tendenz richtig, -5 sonst</li>
      * </ul>
      *
-     * @param user        Alle User in einem Hash, referenzierbar �ber die User-ID
      * @param gameID      ID der Paarung, zu der die Tipppunkte berechnet werden sollen
      * @param oldHomeRes  Altes Ergebnis der Heimmannschaft.
      * @param oldGuestRes Altes Ergebnis der Ausw�rtsmannschaft.
@@ -477,7 +462,7 @@ public class Database implements StorageSystem {
      * @param newGuestRes Neues Ergebnis der Ausw�rtsmannschaft.
      * @throws BlTipException Bei Datenbankfehlern
      */
-    private void resultUpdateTipscores(HashMap<Integer, User> allUser, int gameID, int oldHomeRes, int oldGuestRes,
+    private void resultUpdateTipscores(Map<Integer, User> allUser, int gameID, int oldHomeRes, int oldGuestRes,
                                        int newHomeRes, int newGuestRes) throws BlTipException {
 
         try {
@@ -489,7 +474,7 @@ public class Database implements StorageSystem {
 
             ResultSet matching = stmt.executeQuery(getTipOfUser);
             while (matching.next()) {
-                User user = allUser.get(new Integer(matching.getInt(USER_ID)));
+                User user = allUser.get(matching.getInt(USER_ID));
 
                 int tipScore = user.getTipscore();
                 boolean joker = matching.getInt(TIP_JOKER) == 1;
@@ -601,7 +586,7 @@ public class Database implements StorageSystem {
         Printer printer = new Printer();
         int round = this.getFirstRoundWithoutResults() - 1;
         printer.printHTMLSite("Tipptabelle, " + round + ". Spieltag", "Bundesligatipp 2014/2015 - " + round + ". " +
-                "Spieltag",
+                        "Spieltag",
                 printer.getHTMLUserTable(this.getUsertable()), file);
     }
 
@@ -621,8 +606,8 @@ public class Database implements StorageSystem {
      *
      * @param id ID des Tippers.
      * @return Der Name des Tippers, wird kein Tipper unter der ID gefunden, wird
-     *         <code>null<code> geliefert, genauso bei Fehlern.
-     * @throws BlTipException Bei Datenbankfehlern todo es sollte getUser werden
+     * <code>null<code> geliefert, genauso bei Fehlern.
+     * @throws BlTipException Bei Datenbankfehlern
      */
     public String getUsername(int id) throws BlTipException {
         try {
@@ -650,7 +635,6 @@ public class Database implements StorageSystem {
      * @param userID ID des Users, dessen Tabelle berechnet werden soll.
      * @return Tabelle der Mannschaften, niemals <code>null</code>.
      * @throws BlTipException Bei Datenbankfehlern
-     * @see #sortTeams(Team[], boolean)
      * @see #getTeamsWithPointsAndGoals(int)
      */
     public Team[] calculateTableOfUser(int userID) throws BlTipException {
@@ -669,7 +653,6 @@ public class Database implements StorageSystem {
      * @param teams Feld unsortierter Mannschaften, die �bergabe von <code>null</code> f�hrt zu
      *              einer <code>NullPointerException</code>.
      * @return Feld sortierter Mannschaften
-     * @throws BlTipException Bei Datenbankfehlern
      */
     private Team[] sort(Team[] teams) {
         boolean changed;
@@ -735,9 +718,8 @@ public class Database implements StorageSystem {
      *
      * @param user Array unsortierter Tipper, die �bergabe von <code>null</code> f�hrt zu einer
      *             <code>NullPointerException</code>.
-     * @return Array sortierter Tipper
      */
-    private User[] sort(User[] user) {
+    private void sort(User[] user) {
         boolean changed;
         User helpMe;
 
@@ -752,8 +734,6 @@ public class Database implements StorageSystem {
                 }
             }
         } while (changed);
-
-        return user;
     }
 
     /**
@@ -762,7 +742,7 @@ public class Database implements StorageSystem {
      *
      * @param userID ID des Tippers, dessen Tipps zur Berechnung genommen werden.
      * @return Array von Mannschaften, die Punkte und Tore enthalten, bei Fehlern (bsplw.
-     *         nichts in der Datenbank) <code>null</code>.
+     * nichts in der Datenbank) <code>null</code>.
      */
     private Team[] getTeamsWithPointsAndGoals(int userID) throws BlTipException {
         try {
@@ -901,7 +881,7 @@ public class Database implements StorageSystem {
      * @param teams   Die Bundesligatabelle.
      * @throws BlTipException Bei Datenbankfehlern
      */
-    private void calculateTableScores(HashMap<Integer, User> allUser, Team[] teams) throws BlTipException {
+    private void calculateTableScores(Map<Integer, User> allUser, Team[] teams) throws BlTipException {
 
         int tablescore = NO_SCORES;
         User user = null;
@@ -917,7 +897,7 @@ public class Database implements StorageSystem {
             while (tables.next()) {
                 int userID = tables.getInt(USER_ID);
                 if (user == null || user.getId() != userID) {
-                    user = allUser.get(new Integer(userID));
+                    user = allUser.get(userID);
                     tablescore = NO_SCORES;
                 }
 
@@ -976,7 +956,7 @@ public class Database implements StorageSystem {
     private void handle(Exception e, String title, String msg) throws BlTipException {
         if (e != null) {
             e.printStackTrace();
-            throw new BlTipException(e, title, msg);
+            throw new BlTipException(title, msg);
         } else
             throw new BlTipException(title, msg);
     }

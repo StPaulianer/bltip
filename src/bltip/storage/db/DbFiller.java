@@ -15,16 +15,15 @@ import java.util.regex.Pattern;
 /**
  * Klasse zum Erstellen der initialen DB-Inhalten
  *
- * @author <a href="mailto:nico.mischok@informatik.uni-oldenburg.de">Nico Mischok</a>
+ * @author Nico
  */
 class DbFiller {
 
     private final static boolean DEBUG = true;
-
-    private final DBInserter dbi;
-
-    private final Database db;
+    private static final String GAME_PATTERN = "([\\w|\\W|\\d|\\.|\\s]*)-([\\w|\\W|\\d|\\.|\\s]*)";
     private static final Pattern TIPP_PATTERN = Pattern.compile("(\\d+):(\\d+)\\s*([xX])?");
+    private final DBInserter dbi;
+    private final Database db;
 
     /**
      * Konstruktor l�dt die Properties und verbindet sich zur Datenbank
@@ -87,7 +86,6 @@ class DbFiller {
      * @throws BlTipException Bei Datenbank- oder I/O-Fehlern
      */
     private void fillGames(File games) throws BlTipException {
-
         BufferedReader reader = null;
         try {
             reader = new BufferedReader(new InputStreamReader(new FileInputStream(games)));
@@ -98,7 +96,7 @@ class DbFiller {
             int countOfTeams = 0;
 
             final Pattern roundPattern = Pattern.compile("([1-9][0-9]?)\\.\\s*Spieltag\\s*");
-            final Pattern gamePattern = Pattern.compile("([\\w|�|�|�|�|\\.|\\s]*)-([\\w|�|�|�|�|\\.|\\s]*)");
+            final Pattern gamePattern = Pattern.compile(GAME_PATTERN);
             while ((line = reader.readLine()) != null) {
                 if (line.trim().length() > 0) {
                     final Matcher roundMatcher = roundPattern.matcher(line);
@@ -128,7 +126,7 @@ class DbFiller {
 
             reader.close();
         } catch (IOException e) {
-            handle(e, Messages.ERRORTITLE_IO_GENERAL, e.getMessage());
+            handle(e, e.getMessage());
         } finally {
             close(reader);
         }
@@ -174,7 +172,7 @@ class DbFiller {
 
             reader.close();
         } catch (IOException e) {
-            handle(e, Messages.ERRORTITLE_IO_GENERAL, e.getMessage());
+            handle(e, e.getMessage());
         } finally {
             close(reader);
         }
@@ -218,7 +216,7 @@ class DbFiller {
                 reader = new BufferedReader(new InputStreamReader(in));
                 fillTipsForUser(userId, userfile, reader);
             } catch (IOException e) {
-                handle(e, Messages.ERRORTITLE_IO_GENERAL, e.getMessage());
+                handle(e, e.getMessage());
             } finally {
                 try {
                     if (in != null) {
@@ -314,17 +312,16 @@ class DbFiller {
     /**
      * Regelt das Exception-Handling
      *
-     * @param e     Tats�chlich aufgetretene Ausnahme
-     * @param title Titel des Fehlerfensters
-     * @param msg   Nachricht im Fehlerfenster
+     * @param e   Tats�chlich aufgetretene Ausnahme
+     * @param msg Nachricht im Fehlerfenster
      * @throws BlTipException Bei Datenbank- oder I/O-Fehlern
      */
-    private void handle(Exception e, String title, String msg) throws BlTipException {
+    private void handle(Exception e, String msg) throws BlTipException {
         if (e != null) {
             e.printStackTrace();
-            throw new BlTipException(e, title, msg);
+            throw new BlTipException(Messages.ERRORTITLE_IO_GENERAL, msg);
         } else
-            throw new BlTipException(title, msg);
+            throw new BlTipException(Messages.ERRORTITLE_IO_GENERAL, msg);
     }
 
     /**

@@ -2,8 +2,8 @@ package bltip.valueobject;
 
 /**
  * Ein Objekt dieser Klasse repr�sentiert einen Mitspieler.
- * 
- * @author <a href="mailto:nico.mischok@informatik.uni-oldenburg.de">Nico Mischok</a>
+ *
+ * @author Nico
  * @version 30.07.2005
  */
 public class User {
@@ -14,13 +14,21 @@ public class User {
     //
     // =========================================================================
 
-    /** Eindeutiger Schluessel */
+    /**
+     * Eindeutiger Schluessel
+     */
     private final int id;
-    /** Name des Tippers */
+    /**
+     * Name des Tippers
+     */
     private final String name;
-    /** Tipppunkte */
+    /**
+     * Tipppunkte
+     */
     private int tipscore;
-    /** Tabellenpunkte */
+    /**
+     * Tabellenpunkte
+     */
     private int tablescore;
 
     // =========================================================================
@@ -31,8 +39,8 @@ public class User {
 
     /**
      * Konstruktor
-     * 
-     * @param id Eindeutiger Schl�ssel des Tippers (wird auch in der DB gespeichert)
+     *
+     * @param id   Eindeutiger Schl�ssel des Tippers (wird auch in der DB gespeichert)
      * @param name Name des Tippers
      * @param tipS Tipppunkte
      * @param tabS Tabellenpunkte
@@ -51,7 +59,7 @@ public class User {
 
     /**
      * Liefert den eindeutigen Schl�ssel
-     * 
+     *
      * @return Eindeutiger Schl�ssel
      */
     public int getId() {
@@ -60,7 +68,7 @@ public class User {
 
     /**
      * Liefert Namen des Tippers
-     * 
+     *
      * @return Name des Tippers
      */
     public String getName() {
@@ -69,7 +77,7 @@ public class User {
 
     /**
      * Liefert die Anzahl der Gesmatpunkte
-     * 
+     *
      * @return Anzahl der Gesamtpunkte
      */
     public int getScore() {
@@ -78,7 +86,7 @@ public class User {
 
     /**
      * Liefert Tipppunkte
-     * 
+     *
      * @return Tipppunkte
      */
     public int getTipscore() {
@@ -87,7 +95,7 @@ public class User {
 
     /**
      * Liefert Tabellenpunkte
-     * 
+     *
      * @return Tabellenpunkte
      */
     public int getTablescore() {
@@ -102,9 +110,9 @@ public class User {
 
     /**
      * Setzt Tipp- und Tabellenpunkte
-     * 
-     * @param tipscore Neue Anzahl Tipppunkte
-     * @param tablescore Neue Anzahl Tabellenpunkte
+     *
+     * @param tipScore Neue Anzahl Tipppunkte
+     * @param tabScore Neue Anzahl Tabellenpunkte
      */
     public void setScore(int tipScore, int tabScore) {
         this.tipscore = tipScore;
@@ -119,10 +127,10 @@ public class User {
 
     /**
      * Liefert true, wenn das �bergebene Objekt ein User ist und die gleiche ID hat
-     * 
+     *
      * @param obj Auf Gleichheit zu �berpr�fendes Objekt
      * @return true, wenn die ID des �bergebenen Users gleich der internen ist, wird null
-     *         �bergeben oder ein Objekt mit anderer ID false
+     * �bergeben oder ein Objekt mit anderer ID false
      */
     public boolean equals(Object obj) {
         return obj != null && User.class.isAssignableFrom(obj.getClass()) && ((User) obj).getId() == getId();
@@ -135,7 +143,7 @@ public class User {
 
     /**
      * Ueberschriebene Methode toString liefert den Namen des Tippers.
-     * 
+     *
      * @return Name des Tippers
      */
     public String toString() {

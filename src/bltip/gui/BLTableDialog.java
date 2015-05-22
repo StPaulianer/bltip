@@ -3,35 +3,23 @@
  */
 package bltip.gui;
 
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import bltip.valueobject.Team;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.TableColumn;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableColumnModel;
-import javax.swing.table.TableColumn;
-
-import bltip.valueobject.Team;
-
 /**
  * Dieser Dialog zeigt die Bundesligatabelle an
- * 
- * @author <a href="mailto:nico.mischok@informatik.uni-oldenburg.de">Nico Mischok</a>
+ *
+ * @author Nico
  * @version 07.10.2004 todo der OK-Button k�nnte initial ausgew�hlt sein todo durch Anklicken
  *          der �berschriften ein Umsortieren
  */
 public class BLTableDialog extends JDialog implements ActionListener {
-
-    /** long <code>serialVersionUID</code>. */
-    private static final long serialVersionUID = 7957677822647722141L;
 
     /**
      * Die Tabellen�berschriften<br>
@@ -39,16 +27,21 @@ public class BLTableDialog extends JDialog implements ActionListener {
      * <code>COLHEADS.length</code>
      */
     public static final Object[] COLHEADS = {"Pl.", "Verein", "Sp.", "g.", "u.", "v.", "Tore", "Diff.", "Pkte."};
-
-    /** Button */
+    /**
+     * long <code>serialVersionUID</code>.
+     */
+    private static final long serialVersionUID = 7957677822647722141L;
+    /**
+     * Button
+     */
     private final JButton ok;
 
     /**
      * Konstruktor initialisiert das komplette Layout
-     * 
+     *
      * @param mainfr Mainframe, von dem der Dialog aufgerufen wurde
-     * @param title Titel des Dialogs
-     * @param teams BL-Tabelle
+     * @param title  Titel des Dialogs
+     * @param teams  BL-Tabelle
      */
     public BLTableDialog(MainFrame mainfr, String title, Team[] teams) {
         super(mainfr, title, false);
@@ -98,7 +91,7 @@ public class BLTableDialog extends JDialog implements ActionListener {
 
     /**
      * Spezifizierung der Aktionen
-     * 
+     *
      * @param e Event
      */
     public void actionPerformed(ActionEvent e) {

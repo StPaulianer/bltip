@@ -3,20 +3,16 @@
  */
 package bltip.gui;
 
-import java.awt.Color;
-import java.awt.Component;
-
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
+import java.awt.*;
 
 /**
  * Ein Renderer, um die Bundesligatabelle zu zeichnen. Damit k�nnen z.B. die Absteiger und
  * UEFA-Cup-Teilnehmer in verschiedenen Farben dargestellt werden. Au�erdem kann das Alignment
  * verfeinert werden.
- * 
- * @author <a href="mailto:nico.mischok@informatik.uni-oldenburg.de">Nico Mischok</a>
+ *
+ * @author Nico
  * @version 07.10.2004 todo es gibt viel f�r den GC zu tun, da bei Aufruf von getTableCell...
  *          immer ein neues Label gebraucht wird
  */
@@ -30,7 +26,7 @@ class BLTableCellRenderer implements TableCellRenderer {
      * java.lang.Object, boolean, boolean, int, int)
      */
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row,
-            int column) {
+                                                   int column) {
 
         JLabel label = new JLabel(value != null ? value.toString() : "");
         label.setOpaque(true);
@@ -54,27 +50,27 @@ class BLTableCellRenderer implements TableCellRenderer {
             label.setForeground(Color.white);
         } else {
             switch (row) {
-            case 0:
-                label.setBackground(GUIConstants.COLOR_CHAMPION);
-                break;
-            case 1:
-                label.setBackground(GUIConstants.COLOR_CL);
-                break;
-            case 2:
-                label.setBackground(GUIConstants.COLOR_CL);
-                break;
-            case 3:
-                label.setBackground(GUIConstants.COLOR_CL_QUALIFY);
-                break;
-            case 4:
-            case 5:
-                label.setBackground(GUIConstants.COLOR_UEFACUP);
-                break;
-            case 15:
-            case 16:
-            case 17:
-                label.setBackground(GUIConstants.COLOR_DESCENDER);
-                break;
+                case 0:
+                    label.setBackground(GUIConstants.COLOR_CHAMPION);
+                    break;
+                case 1:
+                    label.setBackground(GUIConstants.COLOR_CL);
+                    break;
+                case 2:
+                    label.setBackground(GUIConstants.COLOR_CL);
+                    break;
+                case 3:
+                    label.setBackground(GUIConstants.COLOR_CL_QUALIFY);
+                    break;
+                case 4:
+                case 5:
+                    label.setBackground(GUIConstants.COLOR_UEFACUP);
+                    break;
+                case 15:
+                case 16:
+                case 17:
+                    label.setBackground(GUIConstants.COLOR_DESCENDER);
+                    break;
             }
         }
 
