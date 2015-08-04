@@ -585,7 +585,7 @@ public class Database implements StorageSystem {
     public void printUserTableInHTML(File file) throws BlTipException {
         Printer printer = new Printer();
         int round = this.getFirstRoundWithoutResults() - 1;
-        printer.printHTMLSite("Tipptabelle, " + round + ". Spieltag", "Bundesligatipp 2014/2015 - " + round + ". " +
+        printer.printHTMLSite("Tipptabelle, " + round + ". Spieltag", "Bundesligatipp 2015/2016 - " + round + ". " +
                         "Spieltag",
                 printer.getHTMLUserTable(this.getUsertable()), file);
     }
