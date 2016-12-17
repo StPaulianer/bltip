@@ -47,7 +47,7 @@ class ObjectSaver {
     /**
      * L�dt die Daten aus der Datenbank und speichert sie als Objekte.
      *
-     * @throws BlTipException
+     * @throws BlTipException Ein Fehler ist aufgetreten
      */
     void load() throws BlTipException {
         this.teams = this.getTeamsFromDB();
@@ -57,7 +57,7 @@ class ObjectSaver {
     /**
      * Schreibt die Objekte in die Datenbank.
      *
-     * @throws BlTipException
+     * @throws BlTipException Ein Fehler ist aufgetreten
      */
     void save() throws BlTipException {
         this.updateTeams();

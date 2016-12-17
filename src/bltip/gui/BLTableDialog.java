@@ -18,14 +18,14 @@ import java.awt.event.ActionListener;
  * @author Nico
  * @version 07.10.2004
  */
-public class BLTableDialog extends JDialog implements ActionListener {
+class BLTableDialog extends JDialog implements ActionListener {
 
     /**
      * Die Tabellen�berschriften<br>
      * <b>Achtung:</b> Die Spaltenzahl der Tabelle richtet sich nach
      * <code>COLHEADS.length</code>
      */
-    public static final Object[] COLHEADS = {"Pl.", "Verein", "Sp.", "g.", "u.", "v.", "Tore", "Diff.", "Pkte."};
+    static final Object[] COLHEADS = {"Pl.", "Verein", "Sp.", "g.", "u.", "v.", "Tore", "Diff.", "Pkte."};
     /**
      * long <code>serialVersionUID</code>.
      */
@@ -42,7 +42,7 @@ public class BLTableDialog extends JDialog implements ActionListener {
      * @param title  Titel des Dialogs
      * @param teams  BL-Tabelle
      */
-    public BLTableDialog(MainFrame mainfr, String title, Team[] teams) {
+    BLTableDialog(MainFrame mainfr, String title, Team[] teams) {
         super(mainfr, title, false);
 
         // Spaltenmodell erzeugen

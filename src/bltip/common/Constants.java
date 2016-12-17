@@ -41,6 +41,14 @@ public class Constants {
      */
     public final static int TIPSCORE_FOR_INCORRECT_JOKER = -5;
     /**
+     * Zusatzpunkte f�r einen richtigen Deluxe-Joker
+     */
+    public final static int TIPSCORE_FOR_CORRECT_DELUXE_JOKER = 8;
+    /**
+     * Abzug f�r falschen Deluxe-Joker
+     */
+    public final static int TIPSCORE_FOR_INCORRECT_DELUXE_JOKER = -8;
+    /**
      * Rohpunkte f�r ein richtiges Ergebnis (+ Differenz, au�er bei Unentschieden)
      */
     public final static int TIPSCORE_FOR_CORRECT_TIP = 2;

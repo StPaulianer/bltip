@@ -110,20 +110,6 @@ public class Team {
         this.setGoalsAgainst(hgoalsAgainst, ggoalsAgainst);
     }
 
-    /**
-     * Copy-Konstruktor
-     *
-     * @param team Mannschaft, die kopiert wird
-     */
-    private Team(Team team) {
-        this.name = team.getName();
-
-        this.setWinsRemisLoses(team.getHomewins(), team.getHomeremis(), team.getHomeloses(), team.getGuestwins(), team
-                .getGuestremis(), team.getGuestloses());
-        this.setGoals(team.getHomegoals(), team.getGuestgoals());
-        this.setGoalsAgainst(team.getHomegoalsAgainst(), team.getGoalsAgainst());
-    }
-
     /*
      * **************************************************************************
      * *

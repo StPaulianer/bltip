@@ -415,11 +415,6 @@ public class Database implements StorageSystem {
             guest.setGoalsAgainst(guest.getHomegoalsAgainst(), guest.getGuestgoalsAgainst() - oldHomeRes);
         }
 
-        /***********************************************************************
-         *
-         * Speichern der Siege etc. und Tore der Mannschaften
-         *
-         **********************************************************************/
         if (newHomeRes != NO_RESULT) {
             // ... Punkte...
             if (newHomeRes - newGuestRes < 0) {
@@ -467,8 +462,7 @@ public class Database implements StorageSystem {
 
         try {
             String getTipOfUser = "SELECT * FROM " + DBTABLE_TIPS + " NATURAL JOIN " + DBTABLE_USER + " WHERE " +
-                    GAMES_ID + "="
-                    + gameID + ";";
+                    GAMES_ID + "=" + gameID + ";";
 
             wlnStmt(getTipOfUser);
 
@@ -477,6 +471,7 @@ public class Database implements StorageSystem {
                 User user = allUser.get(matching.getInt(USER_ID));
 
                 int tipScore = user.getTipscore();
+                boolean deluxeJoker = matching.getInt(TIP_DELUXE_JOKER) == 1;
                 boolean joker = matching.getInt(TIP_JOKER) == 1;
                 int tipH = matching.getInt(TIP_HOME);
                 int tipG = matching.getInt(TIP_GUEST);
@@ -485,14 +480,14 @@ public class Database implements StorageSystem {
                 int oldDiff = oldHomeRes - oldGuestRes;
                 int newDiff = newHomeRes - newGuestRes;
 
-                /***************************************************************
-                 * Altes Ergebnis r�ckg�ngig
-                 **************************************************************/
                 if (oldHomeRes != NO_RESULT) {
                     if ((oldDiff < 0 && tipDiff < 0) || (oldDiff > 0 && tipDiff > 0)) {
                         // Joker passt...
-                        if (joker)
+                        if (joker) {
                             tipScore -= TIPSCORE_FOR_CORRECT_JOKER;
+                        } else if (deluxeJoker) {
+                            tipScore -= TIPSCORE_FOR_CORRECT_DELUXE_JOKER;
+                        }
 
                         if (oldDiff == tipDiff) {
                             if (oldHomeRes == tipH) {
@@ -508,8 +503,11 @@ public class Database implements StorageSystem {
                         }
                     } else if (oldDiff == tipDiff) {
                         // Joker passt...
-                        if (joker)
+                        if (joker) {
                             tipScore -= TIPSCORE_FOR_CORRECT_JOKER;
+                        } else if (deluxeJoker) {
+                            tipScore -= TIPSCORE_FOR_CORRECT_DELUXE_JOKER;
+                        }
 
                         if (oldHomeRes == tipH) {
                             // richtiges Unentschieden
@@ -522,18 +520,20 @@ public class Database implements StorageSystem {
                         // Joker passt nicht...
                         if (joker) {
                             tipScore -= TIPSCORE_FOR_INCORRECT_JOKER;
+                        } else if (deluxeJoker) {
+                            tipScore -= TIPSCORE_FOR_INCORRECT_DELUXE_JOKER;
                         }
                     }
                 }
 
-                /***************************************************************
-                 * Neues Ergebnis rein
-                 **************************************************************/
                 if (newHomeRes != NO_RESULT) {
                     if ((newDiff < 0 && tipDiff < 0) || (newDiff > 0 && tipDiff > 0)) {
                         // Joker passt...
-                        if (joker)
+                        if (joker) {
                             tipScore += TIPSCORE_FOR_CORRECT_JOKER;
+                        } else if (deluxeJoker) {
+                            tipScore += TIPSCORE_FOR_CORRECT_DELUXE_JOKER;
+                        }
 
                         if (newDiff == tipDiff) {
                             if (newHomeRes == tipH) {
@@ -549,8 +549,11 @@ public class Database implements StorageSystem {
                         }
                     } else if (newDiff == tipDiff) {
                         // Joker passt...
-                        if (joker)
+                        if (joker) {
                             tipScore += TIPSCORE_FOR_CORRECT_JOKER;
+                        } else if (deluxeJoker) {
+                            tipScore += TIPSCORE_FOR_CORRECT_DELUXE_JOKER;
+                        }
 
                         if (newHomeRes == tipH) {
                             // richtiges Unentschieden
@@ -563,6 +566,8 @@ public class Database implements StorageSystem {
                         // Joker passt nicht...
                         if (joker) {
                             tipScore += TIPSCORE_FOR_INCORRECT_JOKER;
+                        } else if (deluxeJoker) {
+                            tipScore += TIPSCORE_FOR_INCORRECT_DELUXE_JOKER;
                         }
                     }
                 }
@@ -585,7 +590,7 @@ public class Database implements StorageSystem {
     public void printUserTableInHTML(File file) throws BlTipException {
         Printer printer = new Printer();
         int round = this.getFirstRoundWithoutResults() - 1;
-        printer.printHTMLSite("Tipptabelle, " + round + ". Spieltag", "Bundesligatipp 2015/2016 - " + round + ". " +
+        printer.printHTMLSite("Tipptabelle, " + round + ". Spieltag", "Bundesligatipp 2016/2017 - " + round + ". " +
                         "Spieltag",
                 printer.getHTMLUserTable(this.getUsertable()), file);
     }
@@ -733,9 +738,6 @@ public class Database implements StorageSystem {
                 int gwins = 0, gremis = 0, gloses = 0;
                 int hgoals = 0, hgoalsAgainst = 0, ggoals = 0, ggoalsAgainst = 0;
 
-                /***************************************************************
-                 * Berechnen der Heimpunkte sowie -tore und -gegentore
-                 **************************************************************/
                 // Heimsiege
                 String sqlString = "SELECT " + COUNT_OF_ALL + " FROM " + DBTABLE_GAMES + " NATURAL JOIN " + DBTABLE_TIPS
                         + " WHERE " + USER_ID + "=" + userID + " AND " + GAMES_HOMETEAM + "='"
@@ -784,9 +786,6 @@ public class Database implements StorageSystem {
                     hgoalsAgainst = result.getInt("SUM(" + TIP_GUEST + ")");
                 }
 
-                /***************************************************************
-                 * Berechnen der Auswaertspunkte sowie -tore und -gegentore
-                 **************************************************************/
                 // Ausw�rtssiege
                 sqlString = "SELECT " + COUNT_OF_ALL + " FROM " + DBTABLE_GAMES + " NATURAL JOIN " + DBTABLE_TIPS + "" +
                         " WHERE "

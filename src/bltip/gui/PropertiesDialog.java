@@ -21,7 +21,7 @@ import java.util.Properties;
  * @author Nico
  * @version 10.10.2004
  */
-public class PropertiesDialog extends JDialog implements ActionListener {
+class PropertiesDialog extends JDialog implements ActionListener {
 
     /**
      * long <code>serialVersionUID</code>.
@@ -41,7 +41,7 @@ public class PropertiesDialog extends JDialog implements ActionListener {
      *
      * @param mfr Hauptfenster
      */
-    public PropertiesDialog(MainFrame mfr) {
+    PropertiesDialog(MainFrame mfr) {
         super(mfr, Messages.TITLE_PROP_DIALOG, true);
         this.mfr = mfr;
         this.cfg = null;

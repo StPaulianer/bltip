@@ -11,7 +11,7 @@ import javax.swing.table.AbstractTableModel;
  * @author Nico
  * @version 30.07.2005
  */
-public class BLTableModel extends AbstractTableModel {
+class BLTableModel extends AbstractTableModel {
 
     /**
      * long <code>serialVersionUID</code>.

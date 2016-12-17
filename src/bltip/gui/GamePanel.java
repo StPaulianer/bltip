@@ -15,7 +15,7 @@ import java.awt.*;
  * @author Nico
  * @version 30.07.2005
  */
-public class GamePanel extends JPanel {
+class GamePanel extends JPanel {
 
     /**
      * long <code>serialVersionUID</code>.

@@ -7,8 +7,10 @@ import bltip.common.BlTipException;
 import bltip.gui.Messages;
 import bltip.util.BlTipUtility;
 import bltip.valueobject.Team;
+import bltip.valueobject.Tip;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -33,7 +35,7 @@ class DBInserter {
      *             einer <code>NullPointerException<code>.
      * @throws BlTipException Bei Datenbankfehlern
      */
-    public DBInserter(Connection conn) throws BlTipException {
+    DBInserter(Connection conn) throws BlTipException {
         try {
             this.stmt = conn.createStatement();
         } catch (SQLException e) {
@@ -41,22 +43,24 @@ class DBInserter {
         }
     }
 
-    /**
-     * F�gt einen Tipp in die DB ein
-     *
-     * @param userID   Eindeutiger Schl�ssel des Users
-     * @param gamenr   Nummer des Spiels
-     * @param hometip  Getippte Tore f�r die Heimmannschaft
-     * @param guesttip Getippte Tore f�r die Ausw�rtsmannschaft
-     * @param joker    Ist der Joker gesetzt?
-     * @throws BlTipException Bei Datenbankfehlern
-     */
-    void insertTipIntoDB(int userID, int gamenr, int hometip, int guesttip, boolean joker) throws BlTipException {
-
+    void insertTipIntoDB(int userID, int gamenr, Tip tip)
+            throws BlTipException {
         wln("insert tip of user with id " + userID);
-        String insert_tip = "INSERT " + DBTABLE_TIPS + " (" + USER_ID + "," + GAMES_ID + "," + TIP_HOME + "," + TIP_GUEST + ","
-                + TIP_JOKER + ")" + " VALUES (" + userID + "," + gamenr + "," + hometip + "," + guesttip + ",";
-        insert_tip += joker ? "1);" : "0);";
+        String insert_tip =
+                "INSERT " + DBTABLE_TIPS + " ("
+                        + USER_ID + ","
+                        + GAMES_ID + ","
+                        + TIP_HOME + ","
+                        + TIP_GUEST + ","
+                        + TIP_JOKER + ","
+                        + TIP_DELUXE_JOKER
+                        + ") VALUES ("
+                        + userID + ","
+                        + gamenr + ","
+                        + tip.getHomeTip() + ","
+                        + tip.getGuestTip() + ",";
+        insert_tip += Tip.TipType.JOKER.equals(tip.getTipType()) ? "1," : "0,";
+        insert_tip += Tip.TipType.DELUXE_JOKER.equals(tip.getTipType()) ? "1);" : "0);";
 
         wlnStmt(insert_tip);
         try {
@@ -74,8 +78,8 @@ class DBInserter {
      */
     void insertTeamIntoDB(String team) throws BlTipException {
         wln("insert team " + team);
-        String insert_team = "INSERT " + DBTABLE_TEAMS + " (" + TEAMS_NAME + ")" + " VALUES (" + "'"
-                + BlTipUtility.maskToSQL(team) + "');";
+        String insert_team = "INSERT " + DBTABLE_TEAMS + " (" + TEAMS_NAME + ")"
+                + " VALUES (" + "'" + BlTipUtility.maskToSQL(team) + "');";
 
         wlnStmt(insert_team);
         try {
@@ -93,8 +97,8 @@ class DBInserter {
      */
     void insertUserIntoDB(String user) throws BlTipException {
         wln("insert user " + user);
-        String insert_tipper = "INSERT " + DBTABLE_USER + " (" + USER_NAME + ")" + " VALUES (" + "'"
-                + BlTipUtility.maskToSQL(user) + "');";
+        String insert_tipper = "INSERT " + DBTABLE_USER + " (" + USER_NAME + ")"
+                + " VALUES (" + "'" + BlTipUtility.maskToSQL(user) + "');";
 
         wlnStmt(insert_tipper);
         try {
@@ -110,20 +114,24 @@ class DBInserter {
      * @param round Spieltag
      * @param home  Name der Heimmannschaft
      * @param guest Name der Ausw�rtsmannschaft
+     * @return ID des Spiels
      * @throws BlTipException Bei Datenbankfehlern
      */
-    void insertGameIntoDB(int round, String home, String guest) throws BlTipException {
+    int insertGameIntoDB(int round, String home, String guest) throws BlTipException {
         wln("insert game " + home + "-" + guest);
         String insert_game = "INSERT " + DBTABLE_GAMES + " (" + GAMES_ROUND + "," + GAMES_HOMETEAM + "," + GAMES_GUESTTEAM + ")"
-                + " VALUES (" + round + "," + "'" + BlTipUtility.maskToSQL(home) + "'," + "'" + BlTipUtility.maskToSQL(guest)
-                + "');";
+                + " VALUES (" + round + "," + "'" + BlTipUtility.maskToSQL(home) + "'," + "'" + BlTipUtility.maskToSQL(guest) + "');";
 
         wlnStmt(insert_game);
         try {
-            stmt.executeUpdate(insert_game);
+            stmt.executeUpdate(insert_game, Statement.RETURN_GENERATED_KEYS);
+            ResultSet rs = stmt.getGeneratedKeys();
+            rs.next();
+            return rs.getInt(1);
         } catch (SQLException e) {
             handle(e, e.getMessage());
         }
+        return -1;
     }
 
     /**

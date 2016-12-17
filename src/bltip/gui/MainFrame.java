@@ -20,7 +20,7 @@ import java.util.Properties;
  * @author Nico
  * @version 30.07.2005
  */
-public class MainFrame extends JFrame implements ActionListener {
+class MainFrame extends JFrame implements ActionListener {
 
     /**
      * long <code>serialVersionUID</code>.

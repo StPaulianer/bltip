@@ -18,7 +18,7 @@ import java.awt.event.ActionListener;
  * @author Nico
  * @version 07.10.2004
  */
-public class UserTableDialog extends JDialog implements ActionListener {
+class UserTableDialog extends JDialog implements ActionListener {
 
     /**
      * Die Tabellen�berschriften<br>

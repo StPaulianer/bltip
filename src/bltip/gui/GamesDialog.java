@@ -18,7 +18,7 @@ import java.awt.event.WindowEvent;
  * @author Nico
  * @version 05.10.2004
  */
-public class GamesDialog extends JDialog implements ActionListener {
+class GamesDialog extends JDialog implements ActionListener {
 
     /**
      * long <code>serialVersionUID</code>.

@@ -125,5 +125,5 @@ public interface Messages extends PropertiesConstants {
     /**
      * Titel des Hauptfensters
      */
-    String TITLE_MAINFRAME = "Bundesligatipp 2015/2016";
+    String TITLE_MAINFRAME = "Bundesligatipp 2016/2017";
 }

@@ -8,12 +8,6 @@ package bltip.valueobject;
  */
 public class Game {
 
-    /***************************************************************************
-     *
-     * Attribute
-     *
-     **************************************************************************/
-
     /**
      * Eindeutiger Schluessel
      */
@@ -35,12 +29,6 @@ public class Game {
      */
     private Integer guestresult;
 
-    /***************************************************************************
-     *
-     * Konstruktoren
-     *
-     **************************************************************************/
-
     /**
      * Konstruktor mit �bergebener Heim- und Ausw�rtsmannschaft und Ergebnis
      * @param id      Eindeutiger Schl�ssel des Spiels
@@ -56,12 +44,6 @@ public class Game {
         this.home = hm;
         this.guest = gst;
     }
-
-    /***************************************************************************
-     *
-     * Getter
-     *
-     **************************************************************************/
 
     /**
      * Liefert den eindeutigen Schl�ssel der Begegnung

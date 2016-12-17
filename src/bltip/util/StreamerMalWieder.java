@@ -2,7 +2,7 @@ package bltip.util;
 
 import java.io.*;
 
-public class StreamerMalWieder {
+class StreamerMalWieder {
 
     private static final String[] TEAMS = {"Bayern M�nchen", "Borussia Dortmund", "Hamburger SV", "Arminia Bielefeld", "Schalke 04",
             "Eintracht Frankfurt", "Bayer Leverkusen", "Alemannia Aachen", "VfB Stuttgart", "1. FC N�rnberg",

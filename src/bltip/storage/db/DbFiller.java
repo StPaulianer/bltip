@@ -5,10 +5,13 @@ import bltip.common.Constants;
 import bltip.gui.Messages;
 import bltip.util.BlTipUtility;
 import bltip.valueobject.Team;
+import bltip.valueobject.Tip;
 import bltip.valueobject.User;
 
 import java.io.*;
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,7 +24,7 @@ class DbFiller {
 
     private final static boolean DEBUG = true;
     private static final String GAME_PATTERN = "([\\w|\\W|\\d|\\.|\\s]*)-([\\w|\\W|\\d|\\.|\\s]*)";
-    private static final Pattern TIPP_PATTERN = Pattern.compile("(\\d+):(\\d+)\\s*([xX])?");
+    private static final Pattern TIPP_PATTERN = Pattern.compile("(\\d+):(\\d+)\\s*([xX])?([xX])?");
     private final DBInserter dbi;
     private final Database db;
 
@@ -33,7 +36,7 @@ class DbFiller {
      *             <code>NullPointerException</code>
      * @throws BlTipException Bei Datenbank- oder I/O-Fehlern
      */
-    public DbFiller(Database db, Connection conn) throws BlTipException {
+    DbFiller(Database db, Connection conn) throws BlTipException {
         this.db = db;
         this.dbi = new DBInserter(conn);
     }
@@ -48,13 +51,13 @@ class DbFiller {
      */
     public void fill(File games, File user, File tipfiles) throws BlTipException {
         wln("filling games");
-        fillGames(games);
+        Map<Integer, String[]> gamesMap = fillGames(games);
 
         wln("filling user");
         fillUser(user);
 
         wln("filling tips");
-        fillTips(tipfiles);
+        fillTips(tipfiles, gamesMap);
 
         wln("filling tiptables");
         fillTiptables();
@@ -85,15 +88,11 @@ class DbFiller {
      * @param games Datei, in der die Paarungen stehen
      * @throws BlTipException Bei Datenbank- oder I/O-Fehlern
      */
-    private void fillGames(File games) throws BlTipException {
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream(games)));
-
+    private Map<Integer, String[]> fillGames(File games) throws BlTipException {
+        Map<Integer, String[]> gamesMap = new HashMap<>();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(games)))) {
             String line;
-
-            int round = 0;
-            int countOfTeams = 0;
+            int round = -1;
 
             final Pattern roundPattern = Pattern.compile("([1-9][0-9]?)\\.\\s*Spieltag\\s*");
             final Pattern gamePattern = Pattern.compile(GAME_PATTERN);
@@ -104,32 +103,24 @@ class DbFiller {
                     if (roundMatcher.matches()) {
                         round = Integer.parseInt(roundMatcher.group(1));
                     } else if (gameMatcher.matches()) {
-                        final String heim = gameMatcher.group(1).trim();
-                        final String auswaerts = gameMatcher.group(2).trim();
-                        // Einf�gen der Mannschaften, falls noch nicht drin
-                        // (nur einmal, deswegen die Abfrage nach ersten
-                        // Spieltag)
+                        final String home = gameMatcher.group(1).trim();
+                        final String guest = gameMatcher.group(2).trim();
                         if (round == 1) {
-                            dbi.insertTeamIntoDB(heim);
-                            countOfTeams++;
-                            dbi.insertTeamIntoDB(auswaerts);
-                            countOfTeams++;
+                            dbi.insertTeamIntoDB(home);
+                            dbi.insertTeamIntoDB(guest);
                         }
 
-                        // Einf�gen in die DB
-                        dbi.insertGameIntoDB(round, heim, auswaerts);
+                        int id = dbi.insertGameIntoDB(round, home, guest);
+                        gamesMap.put(id, new String[]{home, guest});
                     } else {
                         wln("Unbekannte Zeile in Paarungen: " + line);
                     }
                 }
             }
-
-            reader.close();
         } catch (IOException e) {
             handle(e, e.getMessage());
-        } finally {
-            close(reader);
         }
+        return gamesMap;
     }
 
     private void close(Reader reader) {
@@ -202,43 +193,33 @@ class DbFiller {
      *
      * @param tipfiles <b>Verzeichnis</b>, in dem die Dateien mit den Tipps liegen (jeweils
      *                 Tippername.txt)
+     * @param gamesMap
      * @throws BlTipException Bei Datenbank- oder I/O-Fehlern
      */
-    private void fillTips(File tipfiles) throws BlTipException {
-        for (int userId = 0; userId < db.getCountOfUser(); userId++) {
-            final String username = db.getUsername(userId + 1);
+    private void fillTips(File tipfiles, Map<Integer, String[]> gamesMap) throws BlTipException {
+        int countOfUser = db.getCountOfUser();
+        for (int userId = 1; userId <= countOfUser; userId++) {
+            final String username = db.getUsername(userId);
             final File userfile = new File(tipfiles + File.separator + username + ".txt");
+            wln("reading tips from " + userfile.getName());
 
-            BufferedReader reader = null;
-            FileInputStream in = null;
-            try {
-                in = new FileInputStream(userfile);
-                reader = new BufferedReader(new InputStreamReader(in));
-                fillTipsForUser(userId, userfile, reader);
+
+            try (FileInputStream in = new FileInputStream(userfile);
+                 BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+                fillTipsForUser(userId, userfile, reader, gamesMap);
             } catch (IOException e) {
                 handle(e, e.getMessage());
-            } finally {
-                try {
-                    if (in != null) {
-                        in.close();
-                    }
-                    if (reader != null) {
-                        reader.close();
-                    }
-                } catch (IOException e) {
-                    // ignore
-                }
             }
-
         }
     }
 
-    private void fillTipsForUser(int tipperId, File userfile, BufferedReader reader) throws IOException,
+    private void fillTipsForUser(int tipperId, File userfile, BufferedReader reader, Map<Integer, String[]> gamesMap) throws IOException,
             BlTipException {
         // erste Paarung (hat in der DB auch 1)
-        int spielnr = 1;
+        int gameNo = 1;
         int jokerPerRound = 0;
-        // solange Zeilen da sind, sollen sie gelesen werden
+        int deluxeJokerPerRound = 0;
+
         String line;
         while (true) {
             line = reader.readLine();
@@ -251,47 +232,56 @@ class DbFiller {
                 if (!matcher.matches()) {
                     throw new IllegalStateException("Fehler in " + userfile + ", unbekannte Zeile: " + line);
                 } else {
-                    // Speichern in der DB
-                    final boolean joker = insertTip(tipperId, spielnr, matcher);
-                    jokerPerRound = validateJokerPerRound(spielnr, joker, jokerPerRound, userfile);
-                    // n�chstes Game
-                    spielnr++;
+                    final int homeTip = Integer.parseInt(matcher.group(1));
+                    final int awayTip = Integer.parseInt(matcher.group(2));
+                    final boolean joker = matcher.group(3) != null;
+                    final boolean deluxeJoker = matcher.group(4) != null;
+                    dbi.insertTipIntoDB(tipperId, gameNo, new Tip(homeTip, awayTip, Tip.TipType.of(joker, deluxeJoker)));
+                    if (deluxeJoker) {
+                        deluxeJokerPerRound++;
+                        String[] homeAndAway = gamesMap.get(gameNo);
+                        validateDeluxeJokerNotOnBayern(userfile, homeTip, awayTip, homeAndAway, gameNo);
+                    } else if (joker) {
+                        jokerPerRound++;
+                    }
+                    if (gameNo % Constants.COUNT_OF_GAMES_PER_ROUND == 0) {
+                        validateJoker(userfile, jokerPerRound, deluxeJokerPerRound, gameNo);
+                        jokerPerRound = 0;
+                        deluxeJokerPerRound = 0;
+                    }
+
+                    gameNo++;
                 }
             }
         }
 
-        validateCountOfTips(spielnr - 1, userfile);
+        validateCountOfTips(gameNo - 1, userfile);
     }
 
-    private void validateCountOfTips(int spielnr, File userfile) {
+    private void validateDeluxeJokerNotOnBayern(File userfile, int homeTip, int awayTip, String[] homeAndAway, int gameNo) {
+        int round = gameNo / Constants.COUNT_OF_GAMES_PER_ROUND + 1;
+        if ((homeTip > awayTip && homeAndAway[0].contains("Bayern"))
+                || (homeTip < awayTip && homeAndAway[1].contains("Bayern"))) {
+            throw new IllegalStateException("Fehler in " + userfile + ", Deluxe-Joker auf Bayern an Spieltag: " + round);
+        }
+    }
+
+    private void validateJoker(File userfile, int jokerPerRound, int deluxeJokerPerRound, int gameNo) {
+        int round = gameNo / Constants.COUNT_OF_GAMES_PER_ROUND + 1;
+        if (jokerPerRound == 0 && deluxeJokerPerRound == 0) {
+            throw new IllegalStateException("Fehler in " + userfile + ", kein Joker gesetzt an Spieltag: " + round);
+        }
+        if (deluxeJokerPerRound > 1) {
+            throw new IllegalStateException("Fehler in " + userfile + ", mehr als einen Deluxe-Joker gesetzt an Spieltag: " + round);
+        }
+    }
+
+    private void validateCountOfTips(int gameNo, File userfile) {
         final int expectedCountOfTips = Constants.COUNT_OF_ROUNDS * Constants.COUNT_OF_GAMES_PER_ROUND;
-        if (spielnr != expectedCountOfTips) {
-            throw new IllegalStateException("Fehler in " + userfile + ", keine korrekte Anzahl an Tipps: " + spielnr
+        if (gameNo != expectedCountOfTips) {
+            throw new IllegalStateException("Fehler in " + userfile + ", keine korrekte Anzahl an Tipps: " + gameNo
                     + " (erwartet: " + expectedCountOfTips + ")");
         }
-    }
-
-    private boolean insertTip(int tipperId, int spielnr, Matcher matcher) throws BlTipException {
-        final int homeTip = Integer.parseInt(matcher.group(1));
-        final int awayTip = Integer.parseInt(matcher.group(2));
-        final boolean joker = matcher.group(3) != null;
-        dbi.insertTipIntoDB(tipperId + 1, spielnr, homeTip, awayTip, joker);
-        return joker;
-    }
-
-    private int validateJokerPerRound(int spielnr, boolean joker, int jokerPerRound, File userfile) {
-        if (joker) {
-            jokerPerRound++;
-        }
-        if (spielnr % Constants.COUNT_OF_GAMES_PER_ROUND == 0) {
-            if (jokerPerRound == 0) {
-                throw new IllegalStateException("Fehler in " + userfile + ", " +
-                        "kein Joker gesetzt an Spieltag: " + (spielnr / Constants
-                        .COUNT_OF_GAMES_PER_ROUND));
-            }
-            jokerPerRound = 0;
-        }
-        return jokerPerRound;
     }
 
     /**

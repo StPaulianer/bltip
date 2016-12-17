@@ -16,7 +16,7 @@ import java.io.File;
  * @author Nico
  * @version 09.10.2004
  */
-public class InitializingDialog extends JDialog implements ActionListener {
+class InitializingDialog extends JDialog implements ActionListener {
 
     /**
      * long <code>serialVersionUID</code>.

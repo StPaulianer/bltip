@@ -199,6 +199,10 @@ public class DBTablesAndStatements extends Constants {
      */
     public static final String TIP_JOKER = "joker";
     /**
+     * Deluxe-Joker?
+     */
+    public static final String TIP_DELUXE_JOKER = "deluxeJoker";
+    /**
      * Zuordnung zum Mannschaftsnamen
      */
     public static final String TIPTABLES_TEAMNAME = TEAMS_NAME;
@@ -309,11 +313,15 @@ public class DBTablesAndStatements extends Constants {
     /**
      * SQL-Befehl zur Erstellung der Tabelle "Tipps"
      */
-    public static final String CREATE_TIP_TABLE = "CREATE TABLE IF NOT EXISTS " + DBTABLE_TIPS + " (" + TIP_USER
-            + " BIGINT NOT NULL REFERENCES " + DBTABLE_USER + "." + USER_ID + " ON DELETE CASCADE ON UPDATE CASCADE, " + TIP_GAME
-            + " BIGINT NOT NULL REFERENCES " + DBTABLE_GAMES + "." + GAMES_ID + " ON DELETE CASCADE ON UPDATE CASCADE, "
-            + TIP_HOME + " INT DEFAULT " + NO_RESULT + ", " + TIP_GUEST + " INT DEFAULT " + NO_RESULT + ", " + TIP_JOKER
-            + " BOOL, " + " PRIMARY KEY (" + TIP_USER + ", " + TIP_GAME + "));";
+    public static final String CREATE_TIP_TABLE =
+            "CREATE TABLE IF NOT EXISTS " + DBTABLE_TIPS + " ("
+                    + TIP_USER + " BIGINT NOT NULL REFERENCES " + DBTABLE_USER + "." + USER_ID + " ON DELETE CASCADE ON UPDATE CASCADE, "
+                    + TIP_GAME + " BIGINT NOT NULL REFERENCES " + DBTABLE_GAMES + "." + GAMES_ID + " ON DELETE CASCADE ON UPDATE CASCADE, "
+                    + TIP_HOME + " INT DEFAULT " + NO_RESULT + ", "
+                    + TIP_GUEST + " INT DEFAULT " + NO_RESULT + ", "
+                    + TIP_JOKER + " BOOL, "
+                    + TIP_DELUXE_JOKER + " BOOL, "
+                    + " PRIMARY KEY (" + TIP_USER + ", " + TIP_GAME + "));";
     /**
      * Zuordnung zum Tipper
      */
