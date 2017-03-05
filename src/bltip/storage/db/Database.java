@@ -6,12 +6,12 @@ package bltip.storage.db;
 import bltip.common.BlTipException;
 import bltip.common.Constants;
 import bltip.gui.Messages;
+import bltip.model.Game;
+import bltip.model.Team;
+import bltip.model.User;
 import bltip.storage.Printer;
 import bltip.storage.StorageSystem;
 import bltip.util.BlTipUtility;
-import bltip.valueobject.Game;
-import bltip.valueobject.Team;
-import bltip.valueobject.User;
 
 import java.io.File;
 import java.sql.*;

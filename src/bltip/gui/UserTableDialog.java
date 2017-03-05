@@ -3,7 +3,7 @@
  */
 package bltip.gui;
 
-import bltip.valueobject.User;
+import bltip.model.User;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableColumnModel;

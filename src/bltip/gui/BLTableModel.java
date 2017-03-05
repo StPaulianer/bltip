@@ -3,7 +3,7 @@
  */
 package bltip.gui;
 
-import bltip.valueobject.Team;
+import bltip.model.Team;
 
 import javax.swing.table.AbstractTableModel;
 

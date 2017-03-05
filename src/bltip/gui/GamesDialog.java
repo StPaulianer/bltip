@@ -1,8 +1,8 @@
 package bltip.gui;
 
 import bltip.common.BlTipException;
+import bltip.model.Game;
 import bltip.storage.StorageSystem;
-import bltip.valueobject.Game;
 
 import javax.swing.*;
 import java.awt.*;

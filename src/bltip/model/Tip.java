@@ -1,4 +1,4 @@
-package bltip.valueobject;
+package bltip.model;
 
 public class Tip {
 

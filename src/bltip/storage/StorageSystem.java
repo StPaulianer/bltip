@@ -4,9 +4,9 @@
 package bltip.storage;
 
 import bltip.common.BlTipException;
-import bltip.valueobject.Game;
-import bltip.valueobject.Team;
-import bltip.valueobject.User;
+import bltip.model.Game;
+import bltip.model.Team;
+import bltip.model.User;
 
 import java.io.File;
 

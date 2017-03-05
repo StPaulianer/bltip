@@ -4,7 +4,7 @@
 package bltip.gui;
 
 import bltip.common.Constants;
-import bltip.valueobject.Game;
+import bltip.model.Game;
 
 import javax.swing.*;
 import java.awt.*;

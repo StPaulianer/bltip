@@ -3,10 +3,10 @@ package bltip.storage.db;
 import bltip.common.BlTipException;
 import bltip.common.Constants;
 import bltip.gui.Messages;
+import bltip.model.Team;
+import bltip.model.Tip;
+import bltip.model.User;
 import bltip.util.BlTipUtility;
-import bltip.valueobject.Team;
-import bltip.valueobject.Tip;
-import bltip.valueobject.User;
 
 import java.io.*;
 import java.sql.Connection;
