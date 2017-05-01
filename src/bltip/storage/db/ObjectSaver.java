@@ -121,8 +121,8 @@ class ObjectSaver {
             while (result.next()) {
                 int userID = result.getInt(USER_ID);
 
-                users.put(userID, new User(userID, result.getString(USER_NAME), result.getInt(USER_TIPSCORE), result
-                        .getInt(USER_TABLESCORE)));
+                users.put(userID, new User(userID, result.getString(USER_NAME), result.getInt(USER_TIPSCORE),
+                        result.getInt(USER_TABLESCORE), result.getInt(USER_EXTRASCORE)));
             }
 
             result.close();

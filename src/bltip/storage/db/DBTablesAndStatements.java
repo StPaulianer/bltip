@@ -122,6 +122,10 @@ public class DBTablesAndStatements extends Constants {
      * Tabellenpunkte
      */
     public static final String USER_TABLESCORE = "tabscore";
+    /**
+     * Punkte fuer Bonusfragen
+     */
+    public static final String USER_EXTRASCORE = "extrascore";
 
     /*
      * **************************************************************************
@@ -273,10 +277,13 @@ public class DBTablesAndStatements extends Constants {
     /**
      * SQL-Befehl zur Erstellung der Tabelle "User"
      */
-    public static final String CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS " + DBTABLE_USER + " (" + USER_ID
-            + " BIGINT NOT NULL AUTO_INCREMENT, " + USER_NAME + " CHAR(" + LENGTH_USERNAME + ") NOT NULL, " + USER_TIPSCORE
-            + " INT DEFAULT " + NO_SCORES + ", " + USER_TABLESCORE + " INT DEFAULT " + NO_SCORES + ", " + " PRIMARY KEY ("
-            + USER_ID + "));";
+    public static final String CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS " + DBTABLE_USER + " ("
+            + USER_ID + " BIGINT NOT NULL AUTO_INCREMENT, "
+            + USER_NAME + " CHAR(" + LENGTH_USERNAME + ") NOT NULL, "
+            + USER_TIPSCORE + " INT DEFAULT " + NO_SCORES + ", "
+            + USER_TABLESCORE + " INT DEFAULT " + NO_SCORES + ", "
+            + USER_EXTRASCORE + " INT DEFAULT " + NO_SCORES + ", "
+            + " PRIMARY KEY (" + USER_ID + "));";
     /**
      * Eindeutiger Schl�ssel der Mannschaft
      */

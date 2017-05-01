@@ -295,8 +295,8 @@ public class Database implements StorageSystem {
                 int index = 0;
                 while (result.next()) {
                     user[index++] = new User(result.getInt(USER_ID), result.getString(USER_NAME),
-                            result.getInt(USER_TIPSCORE),
-                            result.getInt(USER_TABLESCORE));
+                            result.getInt(USER_TIPSCORE), result.getInt(USER_TABLESCORE),
+                            result.getInt(USER_EXTRASCORE));
                 }
 
                 sort(user);

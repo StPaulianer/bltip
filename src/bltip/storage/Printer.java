@@ -106,24 +106,28 @@ public class Printer {
      * @param user Tabelle der User
      */
     public String getHTMLUserTable(User[] user) {
-        String html_usertable = "\t\t\t<table width=\"75%\" border=\"1\";" + " cellpadding=\"2\" cellspacing=\"0\">\n"
-                + "\t\t\t  <tr>\n" + "\t\t\t    <th width=\"15%\">Platz</th>\n" + "\t\t\t    <th " +
-                "width=\"35%\">Name</th>\n"
-                + "\t\t\t    <th width=\"15%\">Tipp</th>\n" + "\t\t\t    <th width=\"15%\">Tabelle</th>\n"
-                + "\t\t\t    <th width=\"20%\">Gesamt</th>\n" + "\t\t\t  </tr>\n";
+        StringBuilder html_usertable = new StringBuilder("\t\t\t<table width=\"75%\" border=\"1\";" + " cellpadding=\"2\" cellspacing=\"0\">\n"
+                + "\t\t\t  <tr>\n"
+                + "\t\t\t    <th width=\"15%\">Platz</th>\n"
+                + "\t\t\t    <th width=\"35%\">Name</th>\n"
+                + "\t\t\t    <th width=\"15%\">Tipp</th>\n"
+                + "\t\t\t    <th width=\"15%\">Tabelle</th>\n"
+                + "\t\t\t    <th width=\"15%\">Bonus</th>\n"
+                + "\t\t\t    <th width=\"20%\">Gesamt</th>\n"
+                + "\t\t\t  </tr>\n");
         for (int i = 0; i < user.length; i++) {
-            html_usertable += "\t\t\t  <tr>\n";
-            html_usertable += "\t\t\t    <td width=\"15%\"" + (i < COUNT_OF_WINNERS ? "; bgcolor=\"" + COLOR_WINNERS + "\"" : "")
-                    + "><center>" + (i + 1) + ".</center></td>\n";
-            html_usertable += "\t\t\t    <td width=\"35%\">" + user[i].getName() + "</td>\n";
-            html_usertable += "\t\t\t    <td width=\"15%\"><center>" + user[i].getTipscore() + "</center></td>\n";
-            html_usertable += "\t\t\t    <td width=\"15%\"><center>" + user[i].getTablescore() + "</center></td>\n";
-            html_usertable += "\t\t\t    <td width=\"20%\"><center>" + user[i].getScore() + "</center></td>\n";
-            html_usertable += "\t\t\t  </tr>\n";
+            html_usertable.append("\t\t\t  <tr>\n");
+            html_usertable.append("\t\t\t    <td width=\"15%\"").append(i < COUNT_OF_WINNERS ? "; bgcolor=\"" + COLOR_WINNERS + "\"" : "").append("><center>").append(i + 1).append(".</center></td>\n");
+            html_usertable.append("\t\t\t    <td width=\"35%\">").append(user[i].getName()).append("</td>\n");
+            html_usertable.append("\t\t\t    <td width=\"15%\"><center>").append(user[i].getTipscore()).append("</center></td>\n");
+            html_usertable.append("\t\t\t    <td width=\"15%\"><center>").append(user[i].getTablescore()).append("</center></td>\n");
+            html_usertable.append("\t\t\t    <td width=\"15%\"><center>").append(user[i].getExtrascore()).append("</center></td>\n");
+            html_usertable.append("\t\t\t    <td width=\"20%\"><center>").append(user[i].getScore()).append("</center></td>\n");
+            html_usertable.append("\t\t\t  </tr>\n");
         }
-        html_usertable += "\t\t\t</table>\n";
+        html_usertable.append("\t\t\t</table>\n");
 
-        return html_usertable;
+        return html_usertable.toString();
     }
 
     /**
@@ -132,26 +136,26 @@ public class Printer {
      * @param teams BL-Tabelle
      */
     private String getHTMLBLTable(Team[] teams) {
-        String html_bltable = "\t\t\t<table width=\"75%\" border=\"1\";" + " cellpadding=\"2\" cellspacing=\"0\">\n"
+        StringBuilder html_bltable = new StringBuilder("\t\t\t<table width=\"75%\" border=\"1\";" + " cellpadding=\"2\" cellspacing=\"0\">\n"
                 + "\t\t\t  <tr>\n" + "\t\t\t    <th width=\"5%\">Platz</th>\n" + "\t\t\t    <th " +
                 "width=\"45%\">Name</th>\n"
                 + "\t\t\t    <th width=\"10%\">Spiele</th>\n" + "\t\t\t    <th width=\"10%\">Punkte</th>\n"
                 + "\t\t\t    <th width=\"10%\">Tore</th>\n" + "\t\t\t    <th width=\"10%\">Ggtore</th>\n"
-                + "\t\t\t    <th width=\"10%\">Diff.</th>\n" + "\t\t\t  </tr>\n";
+                + "\t\t\t    <th width=\"10%\">Diff.</th>\n" + "\t\t\t  </tr>\n");
         for (int i = 0; i < teams.length; i++) {
-            html_bltable += "\t\t\t  <tr>\n";
-            html_bltable += "\t\t\t    <td width=\"5%\"><center>" + (i + 1) + ".</center></td>\n";
-            html_bltable += "\t\t\t    <td width=\"45%\">" + teams[i].getName() + "</td>\n";
-            html_bltable += "\t\t\t    <td width=\"10%\"><center>" + teams[i].getCountOfGames() + "</center></td>\n";
-            html_bltable += "\t\t\t    <td width=\"10%\"><center>" + teams[i].getScore() + "</center></td>\n";
-            html_bltable += "\t\t\t    <td width=\"10%\"><center>" + teams[i].getGoals() + "</center></td>\n";
-            html_bltable += "\t\t\t    <td width=\"10%\"><center>" + teams[i].getGoalsAgainst() + "</center></td>\n";
-            html_bltable += "\t\t\t    <td width=\"10%\"><center>" + teams[i].getDifference() + "</center></td>\n";
-            html_bltable += "\t\t\t  </tr>\n";
+            html_bltable.append("\t\t\t  <tr>\n");
+            html_bltable.append("\t\t\t    <td width=\"5%\"><center>").append(i + 1).append(".</center></td>\n");
+            html_bltable.append("\t\t\t    <td width=\"45%\">").append(teams[i].getName()).append("</td>\n");
+            html_bltable.append("\t\t\t    <td width=\"10%\"><center>").append(teams[i].getCountOfGames()).append("</center></td>\n");
+            html_bltable.append("\t\t\t    <td width=\"10%\"><center>").append(teams[i].getScore()).append("</center></td>\n");
+            html_bltable.append("\t\t\t    <td width=\"10%\"><center>").append(teams[i].getGoals()).append("</center></td>\n");
+            html_bltable.append("\t\t\t    <td width=\"10%\"><center>").append(teams[i].getGoalsAgainst()).append("</center></td>\n");
+            html_bltable.append("\t\t\t    <td width=\"10%\"><center>").append(teams[i].getDifference()).append("</center></td>\n");
+            html_bltable.append("\t\t\t  </tr>\n");
         }
-        html_bltable += "\t\t\t</table>\n";
+        html_bltable.append("\t\t\t</table>\n");
 
-        return html_bltable;
+        return html_bltable.toString();
     }
 
     /**

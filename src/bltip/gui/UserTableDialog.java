@@ -25,7 +25,7 @@ class UserTableDialog extends JDialog implements ActionListener {
      * <b>Achtung:</b> Die Spaltenzahl der Tabelle richtet sich nach
      * <code>COLHEADS.length</code>
      */
-    public static final Object[] COLHEADS = {"Pl.", "Name", "Tipp", "Tab.", "Gesamt"};
+    static final Object[] COLHEADS = {"Pl.", "Name", "Tipp", "Tab.", "Bonus", "Gesamt"};
     /**
      * long <code>serialVersionUID</code>.
      */
@@ -42,10 +42,9 @@ class UserTableDialog extends JDialog implements ActionListener {
      * @param title  Titel des Dialogs
      * @param user   Tipper-Tabelle
      */
-    public UserTableDialog(MainFrame mainfr, String title, User[] user) {
+    UserTableDialog(MainFrame mainfr, String title, User[] user) {
         super(mainfr, title, false);
 
-        // Spaltenmodell erzeugen
         DefaultTableColumnModel cm = new DefaultTableColumnModel();
         for (int i = 0; i < COLHEADS.length; i++) {
             TableColumn col;
@@ -63,6 +62,9 @@ class UserTableDialog extends JDialog implements ActionListener {
                     col = new TableColumn(i, 10);
                     break;
                 case 4:
+                    col = new TableColumn(i, 10);
+                    break;
+                case 5:
                 default:
                     col = new TableColumn(i, 20);
                     break;

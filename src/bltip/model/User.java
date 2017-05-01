@@ -8,12 +8,6 @@ package bltip.model;
  */
 public class User {
 
-    // =========================================================================
-    //
-    // Attribute
-    //
-    // =========================================================================
-
     /**
      * Eindeutiger Schluessel
      */
@@ -23,6 +17,10 @@ public class User {
      */
     private final String name;
     /**
+     * Bonuspunkte
+     */
+    private final int extrascore;
+    /**
      * Tipppunkte
      */
     private int tipscore;
@@ -30,12 +28,6 @@ public class User {
      * Tabellenpunkte
      */
     private int tablescore;
-
-    // =========================================================================
-    //
-    // Konstruktoren
-    //
-    // =========================================================================
 
     /**
      * Konstruktor
@@ -45,85 +37,41 @@ public class User {
      * @param tipS Tipppunkte
      * @param tabS Tabellenpunkte
      */
-    public User(int id, String name, int tipS, int tabS) {
+    public User(int id, String name, int tipS, int tabS, int extraS) {
         this.id = id;
         this.name = name;
+        this.extrascore = extraS;
         this.setScore(tipS, tabS);
     }
 
-    // =========================================================================
-    //
-    // Getter
-    //
-    // =========================================================================
-
-    /**
-     * Liefert den eindeutigen Schl�ssel
-     *
-     * @return Eindeutiger Schl�ssel
-     */
     public int getId() {
         return this.id;
     }
 
-    /**
-     * Liefert Namen des Tippers
-     *
-     * @return Name des Tippers
-     */
     public String getName() {
         return this.name;
     }
 
-    /**
-     * Liefert die Anzahl der Gesmatpunkte
-     *
-     * @return Anzahl der Gesamtpunkte
-     */
     public int getScore() {
-        return this.tipscore + this.tablescore;
+        return this.tipscore + this.tablescore + this.extrascore;
     }
 
-    /**
-     * Liefert Tipppunkte
-     *
-     * @return Tipppunkte
-     */
     public int getTipscore() {
         return this.tipscore;
     }
 
-    /**
-     * Liefert Tabellenpunkte
-     *
-     * @return Tabellenpunkte
-     */
     public int getTablescore() {
         return this.tablescore;
     }
 
-    // =========================================================================
-    //
-    // Setter
-    //
-    // =========================================================================
+    public int getExtrascore() {
+        return extrascore;
+    }
 
-    /**
-     * Setzt Tipp- und Tabellenpunkte
-     *
-     * @param tipScore Neue Anzahl Tipppunkte
-     * @param tabScore Neue Anzahl Tabellenpunkte
-     */
     public void setScore(int tipScore, int tabScore) {
         this.tipscore = tipScore;
         this.tablescore = tabScore;
     }
-
-    // =========================================================================
-    //
-    // Allgemeine Methoden
-    //
-    // =========================================================================
 
     /**
      * Liefert true, wenn das �bergebene Objekt ein User ist und die gleiche ID hat

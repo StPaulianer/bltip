@@ -42,7 +42,7 @@ interface GUIConstants extends PropertiesConstants {
     /**
      * Die bevorzugte Breite der Tipptabelle
      */
-    int WIDTH_SCROLLPANE_USERTABLE = 350;
+    int WIDTH_SCROLLPANE_USERTABLE = 400;
     /**
      * Die bevorzugte H�he der Tipptabelle
      */

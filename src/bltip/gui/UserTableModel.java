@@ -65,6 +65,8 @@ class UserTableModel extends AbstractTableModel {
             case 3:
                 return this.user[row].getTablescore();
             case 4:
+                return this.user[row].getExtrascore();
+            case 5:
                 return this.user[row].getScore();
         }
 

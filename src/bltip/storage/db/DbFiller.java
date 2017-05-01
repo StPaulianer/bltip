@@ -193,7 +193,7 @@ class DbFiller {
      *
      * @param tipfiles <b>Verzeichnis</b>, in dem die Dateien mit den Tipps liegen (jeweils
      *                 Tippername.txt)
-     * @param gamesMap
+     * @param gamesMap map of games
      * @throws BlTipException Bei Datenbank- oder I/O-Fehlern
      */
     private void fillTips(File tipfiles, Map<Integer, String[]> gamesMap) throws BlTipException {

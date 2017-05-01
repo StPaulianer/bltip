@@ -2,11 +2,11 @@ package bltip.model;
 
 public class Tip {
 
-    private int homeTip;
+    private final int homeTip;
 
-    private int guestTip;
+    private final int guestTip;
 
-    private TipType tipType;
+    private final TipType tipType;
 
     public Tip(int homeTip, int awayTip, TipType tipType) {
         this.homeTip = homeTip;
