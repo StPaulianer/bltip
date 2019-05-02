@@ -259,20 +259,20 @@ class DbFiller {
     }
 
     private void validateDeluxeJokerNotOnBayern(File userfile, int homeTip, int awayTip, String[] homeAndAway, int gameNo) {
-        int round = gameNo / Constants.COUNT_OF_GAMES_PER_ROUND + 1;
+        int round = (gameNo + 1) / Constants.COUNT_OF_GAMES_PER_ROUND + 1;
         if ((homeTip > awayTip && homeAndAway[0].contains("Bayern"))
                 || (homeTip < awayTip && homeAndAway[1].contains("Bayern"))) {
-            throw new IllegalStateException("Fehler in " + userfile + ", Deluxe-Joker auf Bayern an Spieltag: " + round);
+            wln("Fehler in " + userfile + ", Deluxe-Joker auf Bayern an Spieltag: " + round);
         }
     }
 
     private void validateJoker(File userfile, int jokerPerRound, int deluxeJokerPerRound, int gameNo) {
-        int round = gameNo / Constants.COUNT_OF_GAMES_PER_ROUND + 1;
+        int round = (gameNo + 1) / Constants.COUNT_OF_GAMES_PER_ROUND + 1;
         if (jokerPerRound == 0 && deluxeJokerPerRound == 0) {
-            throw new IllegalStateException("Fehler in " + userfile + ", kein Joker gesetzt an Spieltag: " + round);
+            wln("Fehler in " + userfile + ", kein Joker gesetzt an Spieltag: " + round);
         }
         if (deluxeJokerPerRound > 1) {
-            throw new IllegalStateException("Fehler in " + userfile + ", mehr als einen Deluxe-Joker gesetzt an Spieltag: " + round);
+            wln("Fehler in " + userfile + ", mehr als einen Deluxe-Joker gesetzt an Spieltag: " + round);
         }
     }
 
