@@ -9,7 +9,7 @@ public class Constants {
     /**
      * Anzahl der Gewinner von Geldpreisen
      */
-    public final static int COUNT_OF_WINNERS = 4;
+    public final static int COUNT_OF_WINNERS = 2;
 
     /**
      * Anzahl der Mannschaften der Bundesliga

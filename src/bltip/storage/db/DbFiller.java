@@ -9,6 +9,7 @@ import bltip.model.User;
 import bltip.util.BlTipUtility;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
@@ -90,7 +91,7 @@ class DbFiller {
      */
     private Map<Integer, String[]> fillGames(File games) throws BlTipException {
         Map<Integer, String[]> gamesMap = new HashMap<>();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(games)))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(games), StandardCharsets.UTF_8))) {
             String line;
             int round = -1;
 
@@ -151,7 +152,7 @@ class DbFiller {
     private void fillUser(File user) throws BlTipException {
         BufferedReader reader = null;
         try {
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream(user)));
+            reader = new BufferedReader(new InputStreamReader(new FileInputStream(user), StandardCharsets.UTF_8));
 
             String line;
             while ((line = reader.readLine()) != null) {
@@ -205,7 +206,7 @@ class DbFiller {
 
 
             try (FileInputStream in = new FileInputStream(userfile);
-                 BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+                 BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
                 fillTipsForUser(userId, userfile, reader, gamesMap);
             } catch (IOException e) {
                 handle(e, e.getMessage());
@@ -259,7 +260,7 @@ class DbFiller {
     }
 
     private void validateDeluxeJokerNotOnBayern(File userfile, int homeTip, int awayTip, String[] homeAndAway, int gameNo) {
-        int round = (gameNo + 1) / Constants.COUNT_OF_GAMES_PER_ROUND + 1;
+        int round = (gameNo + 1) / Constants.COUNT_OF_GAMES_PER_ROUND;
         if ((homeTip > awayTip && homeAndAway[0].contains("Bayern"))
                 || (homeTip < awayTip && homeAndAway[1].contains("Bayern"))) {
             wln("Fehler in " + userfile + ", Deluxe-Joker auf Bayern an Spieltag: " + round);
@@ -267,7 +268,7 @@ class DbFiller {
     }
 
     private void validateJoker(File userfile, int jokerPerRound, int deluxeJokerPerRound, int gameNo) {
-        int round = (gameNo + 1) / Constants.COUNT_OF_GAMES_PER_ROUND + 1;
+        int round = (gameNo + 1) / Constants.COUNT_OF_GAMES_PER_ROUND;
         if (jokerPerRound == 0 && deluxeJokerPerRound == 0) {
             wln("Fehler in " + userfile + ", kein Joker gesetzt an Spieltag: " + round);
         }
@@ -279,8 +280,8 @@ class DbFiller {
     private void validateCountOfTips(int gameNo, File userfile) {
         final int expectedCountOfTips = Constants.COUNT_OF_ROUNDS * Constants.COUNT_OF_GAMES_PER_ROUND;
         if (gameNo != expectedCountOfTips) {
-            throw new IllegalStateException("Fehler in " + userfile + ", keine korrekte Anzahl an Tipps: " + gameNo
-                    + " (erwartet: " + expectedCountOfTips + ")");
+//            throw new IllegalStateException("Fehler in " + userfile + ", keine korrekte Anzahl an Tipps: " + gameNo
+//                    + " (erwartet: " + expectedCountOfTips + ")");
         }
     }
 
